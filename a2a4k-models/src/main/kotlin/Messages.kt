@@ -3,7 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k.models
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonClassDiscriminator
 
 
 @Serializable
@@ -18,18 +21,21 @@ data class Artifact(
 )
 
 @Serializable
-data class Message(
+data class  Message(
     val role: String, // "user" | "agent"
     val parts: List<Part>,
     val metadata: Map<String, String>? = null
 )
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
+@JsonClassDiscriminator("type")
 sealed class Part {
     abstract val metadata: Map<String, String>
 }
 
 @Serializable
+@SerialName("text")
 data class TextPart(
     val text: String,
     override val metadata: Map<String, String>
@@ -38,6 +44,7 @@ data class TextPart(
 }
 
 @Serializable
+@SerialName("file")
 data class FilePart(
     val file: FileData,
     override val metadata: Map<String, String>
@@ -46,6 +53,7 @@ data class FilePart(
 }
 
 @Serializable
+@SerialName("data")
 data class DataPart(
     val data: Map<String, String>,
     override val metadata: Map<String, String>

@@ -3,11 +3,147 @@
 [![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
-# A2A-4K
+# A2A-4K WIP
 
 A2A-4K is a kotlin implementation of the Agent2Agent (A2A) protocol (https://github.com/google/A2A).
 
-The project is currently WIP and looking for contributors.
+The project is currently very much WIP and looking for contributors.
+
+
+## Usage Examples
+
+### Server-side: Implementing a TaskHandler
+
+The `TaskHandler` interface is the core component for handling tasks in the A2A system. It's used to call an Agent of your choice. Here's a simple example of implementing a TaskHandler:
+
+```kotlin
+import org.a2a4k.TaskHandler
+import org.a2a4k.models.*
+
+// Custom TaskHandler that calls your Agent
+class MyAgentTaskHandler : TaskHandler {
+    override fun handle(task: Task): Task {
+        // Extract the message from the task
+        val message = task.history?.lastOrNull()
+
+        // Call your Agent with the message
+        val response = callYourAgent(message)
+
+        // Create a response message
+        val responseMessage = Message(
+            role = "assistant",
+            parts = listOf(TextPart(text = response)),
+            metadata = null
+        )
+
+        // Update the task status
+        val updatedStatus = TaskStatus(
+            state = TaskState.completed,
+            message = responseMessage,
+            timestamp = java.time.Instant.now().toString()
+        )
+
+        // Return the updated task
+        return task.copy(status = updatedStatus)
+    }
+
+    private fun callYourAgent(message: Message?): String {
+        // Implement your Agent call here
+        // This could be an API call to an LLM, a custom AI service, etc.
+        return "Response from your Agent"
+    }
+}
+```
+
+### Setting up the A2A Server
+
+```kotlin
+import org.a2a4k.*
+import org.a2a4k.models.*
+
+// Create your TaskHandler
+val taskHandler = MyAgentTaskHandler()
+
+// Create a TaskManager with your TaskHandler
+val taskManager = InMemoryTaskManager(taskHandler)
+
+// Define your Agent's capabilities
+val capabilities = Capabilities(
+    streaming = true,
+    pushNotifications = true,
+    stateTransitionHistory = true
+)
+
+// Create an AgentCard for your Agent
+val agentCard = AgentCard(
+    name = "My Agent",
+    description = "A custom A2A Agent",
+    url = "https://example.com",
+    version = "1.0.0",
+    capabilities = capabilities,
+    authentication = Authentication(schemes = listOf("none")),
+    defaultInputModes = listOf("text"),
+    defaultOutputModes = listOf("text"),
+    skills = listOf(/* Define your Agent's skills here */)
+)
+
+// Create and start the A2A Server
+val server = A2AServer(
+    host = "0.0.0.0",
+    port = 5000,
+    endpoint = "/",
+    agentCard = agentCard,
+    taskManager = taskManager
+)
+
+// Start the server
+server.start()
+```
+
+### Client-side: Interacting with an A2A Server
+
+```kotlin
+import org.a2a4k.A2AClient
+import org.a2a4k.models.*
+import kotlinx.coroutines.runBlocking
+
+fun main() = runBlocking {
+    // Create an A2A Client
+    val client = A2AClient(baseUrl = "http://localhost:5000")
+
+    try {
+        // Get the Agent's metadata
+        val agentCard = client.getAgentCard()
+        println("Connected to Agent: ${agentCard.name}")
+
+        // Create a message to send to the Agent
+        val message = Message(
+            role = "user",
+            parts = listOf(TextPart(text = "Hello, Agent!")),
+            metadata = null
+        )
+
+        // Send a task to the Agent
+        val response = client.sendTask(
+            taskId = "task-123",
+            sessionId = "session-456",
+            message = message
+        )
+
+        // Process the response
+        if (response.result != null) {
+            val task = response.result
+            val responseMessage = task.status.message
+            println("Agent response: ${responseMessage?.parts?.firstOrNull()?.text}")
+        } else {
+            println("Error: ${response.error?.message}")
+        }
+    } finally {
+        // Close the client
+        client.close()
+    }
+}
+```
 
 
 ## Code of Conduct

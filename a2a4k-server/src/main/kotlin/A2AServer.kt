@@ -12,7 +12,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import org.a2a4k.models.AgentCard
@@ -28,6 +27,7 @@ import org.a2a4k.models.SendTaskStreamingRequest
 import org.a2a4k.models.SetTaskPushNotificationRequest
 import org.a2a4k.models.TaskResubscriptionRequest
 import org.slf4j.LoggerFactory
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * A2AServer implements an Agent-to-Agent communication server based on the A2A protocol.
@@ -70,19 +70,22 @@ class A2AServer(
     /**
      * Logger instance for this class.
      */
-    private val logger = LoggerFactory.getLogger(A2AServer::class.java)
+    private val log = LoggerFactory.getLogger(A2AServer::class.java)
 
     /**
      * JSON serializer/deserializer configured to ignore unknown keys in the input.
      */
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
 
     /**
      * Converter for parsing JSON-RPC requests from their string representation.
      */
     private val converter = RequestConverter()
 
-    private lateinit var server: EmbeddedServer<*, *>
+    private val server = AtomicReference<EmbeddedServer<*, *>>()
 
     /**
      * Starts the A2A server and begins listening for incoming connections.
@@ -92,15 +95,15 @@ class A2AServer(
      * The server starts in a blocking mode (wait = true), which means this method
      * will not return until the server is stopped.
      */
-    fun start() {
-        server = embeddedServer(Netty, port = port, host = host) {
+    fun start(wait: Boolean = false) {
+        server.set(embeddedServer(Netty, port = port, host = host) {
             install(SSE)
             module()
-        }.start(wait = true)
+        }.start(wait = wait))
     }
 
     fun stop() {
-        server.stop()
+        server.get()?.stop(0, 0)
     }
 
     /**
@@ -117,7 +120,7 @@ class A2AServer(
      */
     private fun Application.module() {
         routing {
-            sse(endpoint) {
+            post(endpoint) {
                 try {
                     val body = call.receiveText()
                     val result = when (val jsonRpcRequest = converter.fromJson(body)) {
@@ -138,8 +141,10 @@ class A2AServer(
                             else -> throw IllegalArgumentException("Unexpected request type: ${jsonRpcRequest::class.java}")
                         }
 
-                        streamingResult.collect {
-                            send(ServerSentEvent(json.encodeToString(it)))
+                        sse {
+                            streamingResult.collect {
+                                send(ServerSentEvent(json.encodeToString(it)))
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -166,15 +171,16 @@ class A2AServer(
      * @param e The exception that was thrown during request processing
      */
     private suspend fun handleException(call: ApplicationCall, e: Exception) {
+        log.error("Exception detected: $e")
         val jsonRpcError = when (e) {
             is IllegalArgumentException -> InvalidRequestError()
             else -> {
-                logger.error("Unhandled exception: $e")
+                log.error("Unhandled exception: $e")
                 InternalError()
             }
         }
 
         val response = ErrorResponse(id = null, error = jsonRpcError)
-        call.respond(HttpStatusCode.BadRequest, json.encodeToJsonElement(response))
+        call.respond(HttpStatusCode.OK, json.encodeToString(response))
     }
 }

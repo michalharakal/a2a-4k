@@ -54,12 +54,12 @@ class A2AServerTest {
 
     private val json = Json {
         ignoreUnknownKeys = true
-        classDiscriminator = "_type" // Use a different discriminator to avoid conflict with 'type' property
+        encodeDefaults = true
     }
 
     @BeforeEach
     fun setup() {
-        taskManager = InMemoryTaskManager()
+        taskManager = InMemoryTaskManager(NoopTaskHandler())
         server = A2AServer(
             host = host,
             port = port,
@@ -69,7 +69,7 @@ class A2AServerTest {
         )
 
         // Start server
-        server.start()
+        server.start(wait = false)
 
         // Create HTTP client
         client = HttpClient(CIO) {
@@ -108,7 +108,7 @@ class A2AServerTest {
     }
 
     @Test
-    fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
+     fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
         val requestId = "req-123"

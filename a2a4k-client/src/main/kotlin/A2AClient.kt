@@ -46,7 +46,10 @@ class A2AClient(
     /**
      * The JSON serializer/deserializer configured to ignore unknown keys in the input.
      */
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
     
     /**
      * The HTTP client used for making requests to the server.

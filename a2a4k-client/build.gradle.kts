@@ -9,6 +9,7 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
 
     // Test dependencies
+    testImplementation(project(":a2a4k-server"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
