@@ -4,6 +4,7 @@
 package org.a2a4k.models
 
 import kotlinx.serialization.Serializable
+import java.time.Instant
 
 // Marker interface for streaming task results
 @Serializable
@@ -17,14 +18,14 @@ data class Task(
     val status: TaskStatus,
     val history: List<Message>? = null,
     val artifacts: List<Artifact>? = null,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String> = emptyMap()
 )
 
 @Serializable
 data class TaskStatus(
     val state: TaskState,
     val message: Message? = null,
-    val timestamp: String? = null
+    val timestamp: String = Instant.now().toString() // TODO
 )
 
 @Serializable
@@ -45,7 +46,7 @@ data class TaskArtifactUpdateEvent(
 @Serializable
 data class TaskSendParams(
     val id: String,
-    val sessionId: String? = null,
+    val sessionId: String,
     val message: Message,
     val historyLength: Int? = null,
     val pushNotification: PushNotificationConfig? = null,

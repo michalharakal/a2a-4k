@@ -12,6 +12,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.utils.io.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
@@ -43,7 +44,7 @@ class A2AClient(
      * If not provided, a default client will be created.
      */
     private val httpClient: HttpClient? = null
-) {
+): Closeable {
     /**
      * The JSON serializer/deserializer configured to ignore unknown keys in the input.
      */
@@ -316,7 +317,7 @@ class A2AClient(
     /**
      * Closes the HTTP client and releases resources.
      */
-    fun close() {
+    override fun close() {
         client.close()
     }
 

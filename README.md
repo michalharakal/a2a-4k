@@ -29,22 +29,19 @@ class MyAgentTaskHandler : TaskHandler {
         // Call your Agent with the message
         val response = callYourAgent(message)
 
-        // Create a response message
-        val responseMessage = Message(
-            role = "agent",
+        // Create a response Artifact
+        val responseArtifact = Artifact(
+            name = "agent-response",
             parts = listOf(TextPart(text = response)),
-            metadata = null
         )
 
         // Update the task status
-        val updatedStatus = TaskStatus(
-            state = TaskState.completed,
-            message = responseMessage,
-            timestamp = java.time.Instant.now().toString()
-        )
+        val updatedStatus = TaskStatus(state = TaskState.completed)
 
         // Return the updated task
-        return task.copy(status = updatedStatus)
+        return task.copy(status = updatedStatus,
+            artifacts = listOf(responseArtifact)
+        )
     }
 
     private fun callYourAgent(message: Message?): String {
@@ -81,7 +78,6 @@ val agentCard = AgentCard(
     url = "https://example.com",
     version = "1.0.0",
     capabilities = capabilities,
-    authentication = Authentication(schemes = listOf("none")),
     defaultInputModes = listOf("text"),
     defaultOutputModes = listOf("text"),
     skills = listOf(/* Define your Agent's skills here */)
@@ -119,8 +115,7 @@ fun main() = runBlocking {
         // Create a message to send to the Agent
         val message = Message(
             role = "user",
-            parts = listOf(TextPart(text = "Hello, Agent!")),
-            metadata = null
+            parts = listOf(TextPart(text = "Hello, Agent!"))
         )
 
         // Send a task to the Agent
@@ -134,7 +129,7 @@ fun main() = runBlocking {
         if (response.result != null) {
             val task = response.result
             val responseMessage = task.status.message
-            println("Agent response: ${responseMessage?.parts?.firstOrNull()?.text}")
+            println("Agent response: $responseMessage")
         } else {
             println("Error: ${response.error?.message}")
         }

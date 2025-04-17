@@ -15,16 +15,16 @@ data class Artifact(
     val description: String? = null,
     val parts: List<Part>,
     val metadata: Map<String, String>? = null,
-    val index: Int,
+    val index: Int? = null,
     val append: Boolean? = null,
     val lastChunk: Boolean? = null
 )
 
 @Serializable
-data class  Message(
+data class Message(
     val role: String, // "user" | "agent"
     val parts: List<Part>,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String> = emptyMap()
 )
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -38,21 +38,21 @@ sealed class Part {
 @SerialName("text")
 data class TextPart(
     val text: String,
-    override val metadata: Map<String, String>
+    override val metadata: Map<String, String> = emptyMap()
 ) : Part()
 
 @Serializable
 @SerialName("file")
 data class FilePart(
     val file: FileData,
-    override val metadata: Map<String, String>
+    override val metadata: Map<String, String> = emptyMap()
 ) : Part()
 
 @Serializable
 @SerialName("data")
 data class DataPart(
     val data: Map<String, String>,
-    override val metadata: Map<String, String>
+    override val metadata: Map<String, String> = emptyMap()
 ) : Part()
 
 @Serializable

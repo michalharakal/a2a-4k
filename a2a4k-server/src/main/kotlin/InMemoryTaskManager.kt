@@ -12,6 +12,7 @@ import kotlinx.coroutines.sync.withLock
 import org.a2a4k.models.*
 import org.a2a4k.models.GetTaskResponse
 import org.slf4j.LoggerFactory
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -265,7 +266,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             if (task == null) {
                 val newTask = Task(
                     id = taskSendParams.id,
-                    sessionId = taskSendParams.sessionId,
+                    sessionId = UUID.randomUUID().toString(),
                     status = TaskStatus(state = TaskState.submitted),
                     history = listOf(taskSendParams.message)
                 )

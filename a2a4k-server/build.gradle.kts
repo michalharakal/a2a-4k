@@ -18,6 +18,6 @@ dependencies {
     testImplementation(libs.ktor.client.core)
     testImplementation(libs.ktor.client.cio.jvm)
     testImplementation(libs.ktor.serialization.kotlinx.json)
-    testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.version.get()}")
+    testImplementation(libs.ktor.client.content.negotiation)
     testImplementation("io.mockk:mockk:1.13.10")
 }
