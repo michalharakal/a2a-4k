@@ -44,7 +44,7 @@ class A2AClient(
      * If not provided, a default client will be created.
      */
     private val httpClient: HttpClient? = null
-): Closeable {
+) : Closeable {
     /**
      * The JSON serializer/deserializer configured to ignore unknown keys in the input.
      */
@@ -181,13 +181,13 @@ class A2AClient(
      * @return A flow of streaming responses with task updates.
      * @throws Exception if the request fails or the response cannot be parsed.
      */
-    suspend fun sendTaskStreaming(
+    fun sendTaskStreaming(
         taskId: String,
         sessionId: String,
         message: Message,
         historyLength: Int = 10,
         requestId: String = generateRequestId()
-    ): Flow<SendTaskStreamingResponse> {
+    ): Flow<SendTaskStreamingResponse> = flow {
         val request = SendTaskStreamingRequest(
             id = requestId,
             params = TaskSendParams(
@@ -197,15 +197,14 @@ class A2AClient(
                 historyLength = historyLength
             )
         )
-
-        return flow {
-            client.sse(apiUrl) {
-                //   call.setBody(json.encodeToString(SendTaskStreamingRequest.serializer(), request))
-                incoming.collect { serverSentEvent ->
-                    val responseBody = serverSentEvent.data ?: return@collect
-                    val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
-                    emit(response)
-                }
+        client.sse(request = {
+            url(apiUrl)
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
+        }) {
+            incoming.collect { serverSentEvent ->
+                val responseBody = serverSentEvent.data ?: return@collect
+                val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
+                emit(response)
             }
         }
     }
@@ -307,12 +306,22 @@ class A2AClient(
      * @return A flow of streaming responses with task updates.
      * @throws Exception if the request fails or the response cannot be parsed.
      */
-    suspend fun resubscribeToTask(
+    fun resubscribeToTask(
         taskId: String,
         requestId: String = generateRequestId()
-    ): Flow<SendTaskStreamingResponse> {
+    ): Flow<SendTaskStreamingResponse> = flow {
         val request = TaskResubscriptionRequest(id = requestId, params = TaskQueryParams(id = taskId))
-        error("TODO")
+
+        client.sse(request = {
+            url(apiUrl)
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
+        }) {
+            incoming.collect { serverSentEvent ->
+                val responseBody = serverSentEvent.data ?: return@collect
+                val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
+                emit(response)
+            }
+        }
     }
 
     /**
