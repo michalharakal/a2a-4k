@@ -129,6 +129,7 @@ subprojects {
 dependencies {
     kover(project("a2a4k-models"))
     kover(project("a2a4k-server"))
+    kover(project("a2a4k-client"))
 }
 
 repositories {
