@@ -51,7 +51,7 @@ fun main() = runBlocking {
     val taskHandler = MyAgentTaskHandler()
 
 // Create a TaskManager with your TaskHandler
-    val taskManager = InMemoryTaskManager(taskHandler)
+    val taskManager = BasicTaskManager(taskHandler)
 
 // Define your Agent's capabilities
     val capabilities = Capabilities(

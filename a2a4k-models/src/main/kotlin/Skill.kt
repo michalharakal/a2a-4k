@@ -13,5 +13,5 @@ data class Skill(
     val tags: List<String>,
     val examples: List<String>? = null,
     val inputModes: List<String>? = null,
-    val outputModes: List<String>? = null
+    val outputModes: List<String>? = null,
 )

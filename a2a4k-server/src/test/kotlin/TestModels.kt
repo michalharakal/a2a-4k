@@ -12,11 +12,11 @@ import org.a2a4k.models.Task
 val capabilities = Capabilities(
     streaming = true,
     pushNotifications = true,
-    stateTransitionHistory = true
+    stateTransitionHistory = true,
 )
 
 val authentication = Authentication(
-    schemes = listOf("none")
+    schemes = listOf("none"),
 )
 
 val skill = Skill(
@@ -26,7 +26,7 @@ val skill = Skill(
     tags = listOf("test"),
     examples = listOf("Example 1"),
     inputModes = listOf("text"),
-    outputModes = listOf("text")
+    outputModes = listOf("text"),
 )
 
 val agentCard = AgentCard(
@@ -38,7 +38,7 @@ val agentCard = AgentCard(
     authentication = authentication,
     defaultInputModes = listOf("text"),
     defaultOutputModes = listOf("text"),
-    skills = listOf(skill)
+    skills = listOf(skill),
 )
 
 class NoopTaskHandler : TaskHandler {

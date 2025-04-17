@@ -30,7 +30,7 @@ data class UnknownMethodRequest(
 data class SendTaskRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskSendParams
+    val params: TaskSendParams,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -38,7 +38,7 @@ data class SendTaskRequest(
 data class GetTaskRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskQueryParams
+    val params: TaskQueryParams,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -46,7 +46,7 @@ data class GetTaskRequest(
 data class CancelTaskRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskIdParams
+    val params: TaskIdParams,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -54,7 +54,7 @@ data class CancelTaskRequest(
 data class SetTaskPushNotificationRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskPushNotificationConfig
+    val params: TaskPushNotificationConfig,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -62,7 +62,7 @@ data class SetTaskPushNotificationRequest(
 data class GetTaskPushNotificationRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskIdParams
+    val params: TaskIdParams,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -70,7 +70,7 @@ data class GetTaskPushNotificationRequest(
 data class TaskResubscriptionRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskQueryParams
+    val params: TaskQueryParams,
 ) : JsonRpcRequest()
 
 @Serializable
@@ -78,18 +78,18 @@ data class TaskResubscriptionRequest(
 data class SendTaskStreamingRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
-    val params: TaskSendParams
+    val params: TaskSendParams,
 ) : JsonRpcRequest()
 
 @Serializable
 data class TaskIdParams(
     val id: String,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String>? = null,
 )
 
 @Serializable
 data class TaskQueryParams(
     val id: String,
     val historyLength: Int? = null,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String>? = null,
 )

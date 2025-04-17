@@ -23,19 +23,13 @@ import java.util.concurrent.ConcurrentHashMap
  * in the TaskManager interface, including task creation, retrieval, cancellation,
  * and subscription to task updates.
  */
-class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
+class BasicTaskManager(
+    private val taskHandler: TaskHandler,
+    private val taskStorage: TaskStorage = InMemoryTaskStorage(),
+) : TaskManager {
 
     /** Logger for this class */
     private val log = LoggerFactory.getLogger(this::class.java)
-
-    /** Map of task IDs to Task objects */
-    private val tasks: MutableMap<String, Task> = ConcurrentHashMap()
-
-    /** Map of task IDs to their push notification configurations */
-    private val pushNotificationInfos: MutableMap<String, PushNotificationConfig> = ConcurrentHashMap()
-
-    /** Mutex for synchronizing access to the tasks and push notification maps */
-    private val lock = Mutex()
 
     /** Map of task IDs to lists of subscribers for server-sent events */
     private val taskSseSubscribers: MutableMap<String, MutableList<Channel<Any>>> = ConcurrentHashMap()
@@ -52,33 +46,29 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
     override suspend fun onGetTask(request: GetTaskRequest): GetTaskResponse {
         log.info("Getting task ${request.params.id}")
         val taskQueryParams: TaskQueryParams = request.params
-
-        lock.withLock {
-            val task = tasks[taskQueryParams.id] ?: return GetTaskResponse(id = request.id, error = TaskNotFoundError())
-            val taskResult = appendTaskHistory(task, taskQueryParams.historyLength)
-            return GetTaskResponse(id = request.id, result = taskResult)
-        }
+        val task = taskStorage.fetch(taskQueryParams.id) ?: return GetTaskResponse(
+            id = request.id,
+            error = TaskNotFoundError(),
+        )
+        val taskResult = appendTaskHistory(task, taskQueryParams.historyLength)
+        return GetTaskResponse(id = request.id, result = taskResult)
     }
 
     /**
      * {@inheritDoc}
      *
-     * This implementation attempts to cancel a task in the in-memory store.
+     * This implementation attempts to cancel a task.
      * Currently, tasks are not cancelable, so it always returns a TaskNotCancelableError.
      * If the task is not found, it returns a TaskNotFoundError.
      */
     override suspend fun onCancelTask(request: CancelTaskRequest): CancelTaskResponse {
         log.info("Cancelling task ${request.params.id}")
         val taskIdParams: TaskIdParams = request.params
-
-        lock.withLock {
-            val task = tasks[taskIdParams.id]
-            if (task == null) {
-                return CancelTaskResponse(id = request.id, error = TaskNotFoundError())
-            }
-
-            return CancelTaskResponse(id = request.id, error = TaskNotCancelableError())
-        }
+        taskStorage.fetch(taskIdParams.id) ?: return CancelTaskResponse(
+            id = request.id,
+            error = TaskNotFoundError(),
+        )
+        return CancelTaskResponse(id = request.id, error = TaskNotCancelableError())
     }
 
     /**
@@ -102,7 +92,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             }
 
             val handledTask = taskHandler.handle(task)
-            tasks[taskSendParams.id] = handledTask
+            taskStorage.store(handledTask)
 
             // Return the task with appropriate history length
             val taskResult = appendTaskHistory(handledTask, taskSendParams.historyLength)
@@ -111,7 +101,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             log.error("Error while sending task: ${e.message}")
             SendTaskResponse(
                 id = request.id,
-                error = InternalError()
+                error = InternalError(),
             )
         }
     }
@@ -143,7 +133,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             val initialStatusEvent = TaskStatusUpdateEvent(
                 id = task.id,
                 status = task.status,
-                final = false
+                final = false,
             )
             enqueueEventsForSse(task.id, initialStatusEvent)
 
@@ -155,8 +145,8 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
                 emit(
                     SendTaskStreamingResponse(
                         id = request.id,
-                        error = InternalError()
-                    )
+                        error = InternalError(),
+                    ),
                 )
             }
         }
@@ -170,10 +160,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
      * @throws IllegalArgumentException if the task is not found
      */
     private suspend fun setPushNotificationInfo(taskId: String, notificationConfig: PushNotificationConfig) {
-        lock.withLock {
-            tasks[taskId] ?: throw IllegalArgumentException("Task not found for $taskId")
-            pushNotificationInfos[taskId] = notificationConfig
-        }
+        taskStorage.storeNotificationConfig(taskId, notificationConfig)
     }
 
     /**
@@ -181,23 +168,9 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
      *
      * @param taskId The ID of the task
      * @return The push notification configuration, or null if not set
-     * @throws IllegalArgumentException if the task is not found
      */
     private suspend fun getPushNotificationInfo(taskId: String): PushNotificationConfig? {
-        lock.withLock {
-            tasks[taskId] ?: throw IllegalArgumentException("Task not found for $taskId")
-            return pushNotificationInfos[taskId]
-        }
-    }
-
-    /**
-     * Checks if a push notification configuration exists for a task.
-     *
-     * @param taskId The ID of the task
-     * @return true if a push notification configuration exists, false otherwise
-     */
-    private fun hasPushNotificationInfo(taskId: String): Boolean {
-        return pushNotificationInfos.containsKey(taskId)
+        return taskStorage.fetchNotificationConfig(taskId)
     }
 
     /**
@@ -217,7 +190,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             log.error("Error while setting push notification info: ${e.message}")
             SetTaskPushNotificationResponse(
                 id = request.id,
-                error = InternalError()
+                error = InternalError(),
             )
         }
     }
@@ -237,19 +210,19 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             if (notificationInfo != null) {
                 GetTaskPushNotificationResponse(
                     id = request.id,
-                    result = TaskPushNotificationConfig(id = taskParams.id, pushNotificationConfig = notificationInfo)
+                    result = TaskPushNotificationConfig(id = taskParams.id, pushNotificationConfig = notificationInfo),
                 )
             } else {
                 GetTaskPushNotificationResponse(
                     id = request.id,
-                    error = InternalError()
+                    error = InternalError(),
                 )
             }
         } catch (e: Exception) {
             log.error("Error while getting push notification info: ${e.message}")
             GetTaskPushNotificationResponse(
                 id = request.id,
-                error = InternalError()
+                error = InternalError(),
             )
         }
     }
@@ -262,25 +235,23 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
      */
     private suspend fun upsertTask(taskSendParams: TaskSendParams): Task {
         log.info("Upserting task ${taskSendParams.id}")
-        return lock.withLock {
-            val task = tasks[taskSendParams.id]
-            if (task == null) {
-                val newTask = Task(
-                    id = taskSendParams.id,
-                    sessionId = taskSendParams.sessionId ?: UUID.randomUUID().toString(),
-                    status = TaskStatus(state = TaskState.submitted),
-                    history = listOf(taskSendParams.message)
-                )
-                tasks[taskSendParams.id] = newTask
-                newTask
-            } else {
-                // Create a new task with updated history
-                val updatedHistory = task.history?.toMutableList() ?: mutableListOf()
-                updatedHistory.add(taskSendParams.message)
-                val updatedTask = task.copy(history = updatedHistory)
-                tasks[taskSendParams.id] = updatedTask
-                updatedTask
-            }
+        val task = taskStorage.fetch(taskSendParams.id)
+        return if (task == null) {
+            val newTask = Task(
+                id = taskSendParams.id,
+                sessionId = taskSendParams.sessionId ?: UUID.randomUUID().toString(),
+                status = TaskStatus(state = TaskState.submitted),
+                history = listOf(taskSendParams.message),
+            )
+            taskStorage.store(newTask)
+            newTask
+        } else {
+            // Create a new task with updated history
+            val updatedHistory = task.history?.toMutableList() ?: mutableListOf()
+            updatedHistory.add(taskSendParams.message)
+            val updatedTask = task.copy(history = updatedHistory)
+            taskStorage.store(updatedTask)
+            updatedTask
         }
     }
 
@@ -294,85 +265,42 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
     override suspend fun onResubscribeToTask(request: TaskResubscriptionRequest): Flow<SendTaskStreamingResponse> {
         log.info("Resubscribing to task ${request.params.id}")
         val taskQueryParams: TaskQueryParams = request.params
-
         return try {
-            lock.withLock {
-                val task = tasks[taskQueryParams.id]
-                if (task == null) {
-                    return flow {
-                        emit(
-                            SendTaskStreamingResponse(
-                                id = request.id,
-                                error = TaskNotFoundError()
-                            )
-                        )
-                    }
+            val task = taskStorage.fetch(taskQueryParams.id)
+            if (task == null) {
+                return flow {
+                    emit(
+                        SendTaskStreamingResponse(
+                            id = request.id,
+                            error = TaskNotFoundError(),
+                        ),
+                    )
                 }
-
-                // Set up SSE consumer with resubscribe flag
-                val sseEventQueue = setupSseConsumer(taskQueryParams.id, isResubscribe = true)
-
-                // Send current task status update
-                val statusEvent = TaskStatusUpdateEvent(
-                    id = task.id,
-                    status = task.status,
-                    final = false
-                )
-                enqueueEventsForSse(task.id, statusEvent)
-
-                // Return the flow of events
-                dequeueEventsForSse(request.id ?: "", task.id, sseEventQueue)
             }
+
+            // Set up SSE consumer with resubscribe flag
+            val sseEventQueue = setupSseConsumer(taskQueryParams.id, isResubscribe = true)
+
+            // Send current task status update
+            val statusEvent = TaskStatusUpdateEvent(
+                id = task.id,
+                status = task.status,
+                final = false,
+            )
+            enqueueEventsForSse(task.id, statusEvent)
+
+            // Return the flow of events
+            dequeueEventsForSse(request.id ?: "", task.id, sseEventQueue)
         } catch (e: Exception) {
             log.error("Error while resubscribing to task: ${e.message}")
             flow {
                 emit(
                     SendTaskStreamingResponse(
                         id = request.id,
-                        error = InternalError()
-                    )
+                        error = InternalError(),
+                    ),
                 )
             }
-        }
-    }
-
-    /**
-     * Updates a task's status and artifacts in the store.
-     *
-     * @param taskId The ID of the task to update
-     * @param status The new status for the task
-     * @param artifacts The new artifacts for the task, or null to keep existing artifacts
-     * @return The updated task
-     * @throws IllegalArgumentException if the task is not found
-     */
-    private suspend fun updateStore(taskId: String, status: TaskStatus, artifacts: List<Artifact>?): Task {
-        return lock.withLock {
-            val task = tasks[taskId] ?: throw IllegalArgumentException("Task $taskId not found")
-
-            // Create updated history
-            val updatedHistory = task.history?.toMutableList() ?: mutableListOf()
-            status.message?.let { updatedHistory.add(it) }
-
-            // Create updated artifacts
-            val updatedArtifacts = if (artifacts != null) {
-                val currentArtifacts = task.artifacts?.toMutableList() ?: mutableListOf()
-                currentArtifacts.addAll(artifacts)
-                currentArtifacts
-            } else {
-                task.artifacts
-            }
-
-            // Create a new task with updated fields
-            val updatedTask = task.copy(
-                status = status,
-                history = updatedHistory,
-                artifacts = updatedArtifacts
-            )
-
-            // Update the task in the map
-            tasks[taskId] = updatedTask
-
-            updatedTask
         }
     }
 
@@ -385,11 +313,9 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
      */
     private fun appendTaskHistory(task: Task, historyLength: Int?): Task {
         val updatedHistory = if (historyLength != null && historyLength > 0) {
-            task.history?.let { history ->
-                history.takeLast(historyLength).toMutableList()
-            } ?: emptyList()
+            task.history?.takeLast(historyLength)?.toMutableList() ?: emptyList()
         } else {
-            emptyList()
+            null
         }
         return task.copy(history = updatedHistory)
     }
@@ -443,7 +369,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
     private fun dequeueEventsForSse(
         requestId: String,
         taskId: String,
-        sseEventQueue: Channel<Any>
+        sseEventQueue: Channel<Any>,
     ): Flow<SendTaskStreamingResponse> = flow {
         try {
             for (event in sseEventQueue) {

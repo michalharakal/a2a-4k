@@ -5,19 +5,13 @@ package org.a2a4k
 
 import io.ktor.util.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.a2a4k.models.*
 import org.a2a4k.models.GetTaskResponse
-import org.slf4j.LoggerFactory
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Interface for managing tasks in the A2A system.
- * 
+ *
  * This interface defines methods for creating, retrieving, updating, and subscribing to tasks.
  * It also provides functionality for managing push notifications related to tasks.
  */

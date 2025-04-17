@@ -18,14 +18,14 @@ data class Task(
     val status: TaskStatus,
     val history: List<Message>? = null,
     val artifacts: List<Artifact>? = null,
-    val metadata: Map<String, String> = emptyMap()
+    val metadata: Map<String, String> = emptyMap(),
 )
 
 @Serializable
 data class TaskStatus(
     val state: TaskState,
     val message: Message? = null,
-    val timestamp: String = Instant.now().toString() // TODO
+    val timestamp: String = Instant.now().toString(), // TODO
 )
 
 @Serializable
@@ -33,14 +33,14 @@ data class TaskStatusUpdateEvent(
     val id: String,
     val status: TaskStatus,
     val final: Boolean,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String>? = null,
 ) : TaskStreamingResult()
 
 @Serializable
 data class TaskArtifactUpdateEvent(
     val id: String,
     val artifact: Artifact,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String>? = null,
 ) : TaskStreamingResult()
 
 @Serializable
@@ -50,7 +50,7 @@ data class TaskSendParams(
     val message: Message,
     val historyLength: Int? = null,
     val pushNotification: PushNotificationConfig? = null,
-    val metadata: Map<String, String>? = null
+    val metadata: Map<String, String>? = null,
 )
 
 @Serializable
@@ -61,5 +61,5 @@ enum class TaskState {
     completed,
     canceled,
     failed,
-    unknown
+    unknown,
 }

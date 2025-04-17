@@ -17,7 +17,7 @@ class RequestConverter {
         coerceInputValues = true
         explicitNulls = false
         serializersModule = SerializersModule {
-           polymorphicDefaultDeserializer(JsonRpcRequest::class) { UnknownMethodRequest.serializer() }
+            polymorphicDefaultDeserializer(JsonRpcRequest::class) { UnknownMethodRequest.serializer() }
         }
     }
 
@@ -29,10 +29,6 @@ class RequestConverter {
      * @throws IllegalArgumentException if the JSON is invalid
      */
     fun fromJson(jsonString: String): JsonRpcRequest {
-        try {
-            return json.decodeFromString<JsonRpcRequest>(jsonString)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Unexpected error while parsing A2ARequest: $jsonString", e)
-        }
+        return json.decodeFromString<JsonRpcRequest>(jsonString)
     }
 }

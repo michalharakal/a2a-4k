@@ -49,7 +49,7 @@ class A2AServerTest {
     private val apiUrl = "$baseUrl$endpoint"
     private val agentCardUrl = "$baseUrl/.well-known/agent.json"
 
-    private lateinit var taskManager: InMemoryTaskManager
+    private lateinit var taskManager: BasicTaskManager
     private lateinit var server: A2AServer
     private lateinit var client: HttpClient
 
@@ -62,13 +62,13 @@ class A2AServerTest {
 
     @BeforeEach
     fun setup() {
-        taskManager = InMemoryTaskManager(NoopTaskHandler())
+        taskManager = BasicTaskManager(NoopTaskHandler())
         server = A2AServer(
             host = host,
             port = port,
             endpoint = endpoint,
             agentCard = agentCard,
-            taskManager = taskManager
+            taskManager = taskManager,
         )
 
         // Start server
@@ -114,13 +114,13 @@ class A2AServerTest {
     }
 
     @Test
-     fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
+    fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
         val requestId = "req-123"
         val request = GetTaskRequest(
             id = requestId,
-            params = TaskQueryParams(id = taskId, historyLength = 10)
+            params = TaskQueryParams(id = taskId, historyLength = 10),
         )
 
         // When
@@ -155,8 +155,8 @@ class A2AServerTest {
                 id = taskId,
                 sessionId = sessionId,
                 message = message,
-                historyLength = 10
-            )
+                historyLength = 10,
+            ),
         )
 
         // When - Send task
@@ -180,7 +180,7 @@ class A2AServerTest {
         // When - Get task
         val getRequest = GetTaskRequest(
             id = "get-req-123",
-            params = TaskQueryParams(id = taskId, historyLength = 10)
+            params = TaskQueryParams(id = taskId, historyLength = 10),
         )
 
         val getResponse = client.post(apiUrl) {
@@ -208,7 +208,7 @@ class A2AServerTest {
         val requestId = "req-cancel"
         val request = CancelTaskRequest(
             id = requestId,
-            params = TaskIdParams(id = taskId)
+            params = TaskIdParams(id = taskId),
         )
 
         // When
@@ -243,8 +243,8 @@ class A2AServerTest {
                 id = taskId,
                 sessionId = sessionId,
                 message = message,
-                historyLength = 10
-            )
+                historyLength = 10,
+            ),
         )
 
         client.post(apiUrl) {
@@ -255,7 +255,7 @@ class A2AServerTest {
         val pushConfig = PushNotificationConfig(url = "https://example.com/push")
         val setPushRequest = SetTaskPushNotificationRequest(
             id = requestId,
-            params = TaskPushNotificationConfig(id = taskId, pushNotificationConfig = pushConfig)
+            params = TaskPushNotificationConfig(id = taskId, pushNotificationConfig = pushConfig),
         )
 
         // When - Set push notification
@@ -277,7 +277,7 @@ class A2AServerTest {
         // When - Get push notification
         val getPushRequest = GetTaskPushNotificationRequest(
             id = "get-push-req-123",
-            params = TaskIdParams(id = taskId)
+            params = TaskIdParams(id = taskId),
         )
 
         val getPushResponse = client.post(apiUrl) {

@@ -11,5 +11,4 @@ dependencies {
     implementation(rootProject.libs.kotlinx.coroutines.jdk8)
     implementation(rootProject.libs.kotlinx.coroutines.reactor)
     implementation(rootProject.libs.kotlinx.serialization.json)
-
 }

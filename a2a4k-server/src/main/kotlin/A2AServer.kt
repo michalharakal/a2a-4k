@@ -12,6 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import org.a2a4k.models.AgentCard
 import org.a2a4k.models.CancelTaskRequest
@@ -20,6 +21,7 @@ import org.a2a4k.models.GetTaskPushNotificationRequest
 import org.a2a4k.models.GetTaskRequest
 import org.a2a4k.models.InternalError
 import org.a2a4k.models.InvalidRequestError
+import org.a2a4k.models.JsonParseError
 import org.a2a4k.models.MethodNotFoundError
 import org.a2a4k.models.RequestConverter
 import org.a2a4k.models.SendTaskRequest
@@ -66,7 +68,7 @@ class A2AServer(
      * The task manager responsible for handling task-related operations such as
      * creating, retrieving, and canceling tasks.
      */
-    private val taskManager: TaskManager
+    private val taskManager: TaskManager,
 ) {
     /**
      * Logger instance for this class.
@@ -99,10 +101,12 @@ class A2AServer(
      * will not return until the server is stopped.
      */
     fun start(wait: Boolean = false) {
-        server.set(embeddedServer(Netty, port = port, host = host) {
-            install(SSE)
-            module()
-        }.start(wait = wait))
+        server.set(
+            embeddedServer(Netty, port = port, host = host) {
+                install(SSE)
+                module()
+            }.start(wait = wait),
+        )
     }
 
     fun stop() {
@@ -176,6 +180,7 @@ class A2AServer(
     private suspend fun handleException(call: ApplicationCall, e: Exception) {
         log.error("Exception detected: $e")
         val jsonRpcError = when (e) {
+            is SerializationException -> JsonParseError()
             is IllegalArgumentException -> InvalidRequestError()
             else -> {
                 log.error("Unhandled exception: $e")

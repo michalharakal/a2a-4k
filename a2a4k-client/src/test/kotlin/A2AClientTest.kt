@@ -41,7 +41,7 @@ class A2AClientTest {
         )
 
         // Create task manager
-        taskManager = InMemoryTaskManager(NoopTaskHandler())
+        taskManager = BasicTaskManager(NoopTaskHandler())
 
         // Create and start server
         server = A2AServer(
@@ -104,10 +104,10 @@ class A2AClientTest {
         val taskId = "test-task-123"
         val sessionId = "session-123"
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
-        val message = Message(role = "user", parts = listOf(textPart), metadata = null)
+        val message = Message(role = "user", parts = listOf(textPart))
 
         // When - Send task
-        val sendResponse = client.sendTask(taskId, sessionId, message)
+        val sendResponse = client.sendTask(message, taskId, sessionId)
 
         // Then - Send task response
         assertNotNull(sendResponse.result)
@@ -149,10 +149,10 @@ class A2AClientTest {
         val taskId = "test-task-456"
         val sessionId = "session-456"
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
-        val message = Message(role = "user", parts = listOf(textPart), metadata = null)
+        val message = Message(role = "user", parts = listOf(textPart))
 
         // Create task first
-        client.sendTask(taskId, sessionId, message)
+        client.sendTask(message, taskId, sessionId)
 
         // Create push notification config
         val config = PushNotificationConfig(
