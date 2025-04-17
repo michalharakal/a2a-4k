@@ -78,6 +78,7 @@ class A2AServer(
      */
     private val json = Json {
         ignoreUnknownKeys = true
+        coerceInputValues = true
         encodeDefaults = true
         explicitNulls = false
     }

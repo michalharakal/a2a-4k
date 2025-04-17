@@ -52,6 +52,7 @@ class A2AClient(
         ignoreUnknownKeys = true
         encodeDefaults = true
         explicitNulls = false
+        coerceInputValues = true
     }
 
     /**

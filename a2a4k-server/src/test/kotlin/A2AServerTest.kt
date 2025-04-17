@@ -54,6 +54,7 @@ class A2AServerTest {
     private lateinit var client: HttpClient
 
     private val json = Json {
+        coerceInputValues = true
         ignoreUnknownKeys = true
         encodeDefaults = true
         explicitNulls = false
@@ -145,7 +146,7 @@ class A2AServerTest {
         val sessionId = "session-123"
         val requestId = "req-456"
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
-        val message = Message(role = "user", parts = listOf(textPart), metadata = null)
+        val message = Message(role = "user", parts = listOf(textPart))
 
         // Create task
         val sendRequest = SendTaskRequest(
@@ -233,7 +234,7 @@ class A2AServerTest {
         val sessionId = "session-push"
         val requestId = "req-push"
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
-        val message = Message(role = "user", parts = listOf(textPart), metadata = null)
+        val message = Message(role = "user", parts = listOf(textPart))
 
         // Create task
         val sendRequest = SendTaskRequest(
