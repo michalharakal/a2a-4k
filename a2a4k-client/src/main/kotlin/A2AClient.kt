@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import org.a2a4k.models.*
+import java.util.UUID
 
 /**
  * A2AClient implements an Agent-to-Agent communication client based on the A2A protocol.
@@ -90,9 +91,8 @@ class A2AClient(
     suspend fun getAgentCard(): AgentCard {
         val response = client.get(agentCardUrl)
         if (response.status != HttpStatusCode.OK) {
-            throw Exception("Failed to get agent card: ${response.status}")
+            throw ServerException("Failed to get agent card: ${response.status}!")
         }
-
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
@@ -117,11 +117,11 @@ class A2AClient(
         )
 
         val response = client.post(apiUrl) {
-            setBody(json.encodeToString(GetTaskRequest.serializer(), request))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
         }
 
         if (response.status != HttpStatusCode.OK) {
-            throw Exception("Failed to get task: ${response.status}")
+            throw ServerException("Failed to get task: ${response.status}")
         }
 
         val responseBody = response.bodyAsText()
@@ -157,11 +157,11 @@ class A2AClient(
         )
 
         val response = client.post(apiUrl) {
-            setBody(json.encodeToString(SendTaskRequest.serializer(), request))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
         }
 
         if (response.status != HttpStatusCode.OK) {
-            throw Exception("Failed to send task: ${response.status}")
+            throw ServerException("Failed to send task: ${response.status}")
         }
 
         val responseBody = response.bodyAsText()
@@ -198,11 +198,12 @@ class A2AClient(
 
         return flow {
             client.sse(apiUrl) {
-                setBody(json.encodeToString(SendTaskStreamingRequest.serializer(), request))
-            }.collect { serverSentEvent ->
-                val responseBody = serverSentEvent.data
-                val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
-                emit(response)
+                //   call.setBody(json.encodeToString(SendTaskStreamingRequest.serializer(), request))
+                incoming.collect { serverSentEvent ->
+                    val responseBody = serverSentEvent.data ?: return@collect
+                    val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
+                    emit(response)
+                }
             }
         }
     }
@@ -222,8 +223,7 @@ class A2AClient(
         )
 
         val response = client.post(apiUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(CancelTaskRequest.serializer(), request))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
         }
 
         if (response.status != HttpStatusCode.OK) {
@@ -257,8 +257,7 @@ class A2AClient(
         )
 
         val response = client.post(apiUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(SetTaskPushNotificationRequest.serializer(), request))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
         }
 
         if (response.status != HttpStatusCode.OK) {
@@ -287,8 +286,7 @@ class A2AClient(
         )
 
         val response = client.post(apiUrl) {
-            contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(GetTaskPushNotificationRequest.serializer(), request))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
         }
 
         if (response.status != HttpStatusCode.OK) {
@@ -311,20 +309,8 @@ class A2AClient(
         taskId: String,
         requestId: String = generateRequestId()
     ): Flow<SendTaskStreamingResponse> {
-        val request = TaskResubscriptionRequest(id = requestId, params = TaskIdParams(id = taskId))
-
-        return flow {
-            client.sse( {
-                apiUrl
-                contentType(ContentType.Application.Json)
-                setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
-                incoming.collect { serverSentEvent ->
-                    val responseBody = serverSentEvent.data
-                    val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
-                    emit(response)
-                }
-            })
-        }
+        val request = TaskResubscriptionRequest(id = requestId, params = TaskQueryParams(id = taskId))
+        error("TODO")
     }
 
     /**
@@ -340,6 +326,6 @@ class A2AClient(
      * @return A unique string ID.
      */
     private fun generateRequestId(): String {
-        return "req-${System.currentTimeMillis()}-${(0..999).random()}"
+        return "${UUID.randomUUID()}"
     }
 }
