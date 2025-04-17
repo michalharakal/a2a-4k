@@ -5,7 +5,6 @@ package org.a2a4k.models
 
 import kotlinx.serialization.Serializable
 
-// Agent Card
 @Serializable
 data class AgentCard(
     val name: String,

@@ -19,7 +19,7 @@ class InMemoryTaskManagerTest {
     
     @BeforeEach
     fun setup() {
-        taskManager = InMemoryTaskManager()
+        taskManager = InMemoryTaskManager(NoopTaskHandler())
     }
     
     @Test

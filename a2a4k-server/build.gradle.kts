@@ -6,11 +6,17 @@ dependencies {
     implementation(project(":a2a4k-models"))
     implementation(libs.ktor.server.core.jvm)
     implementation(libs.ktor.server.netty.jvm)
+    implementation(libs.ktor.server.sse)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.server.sse)
 
     // Test dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
+    testImplementation(libs.ktor.client.core)
+    testImplementation(libs.ktor.client.cio.jvm)
+    testImplementation(libs.ktor.serialization.kotlinx.json)
+    testImplementation("io.ktor:ktor-client-content-negotiation:${libs.versions.ktor.version.get()}")
     testImplementation("io.mockk:mockk:1.13.10")
 }
