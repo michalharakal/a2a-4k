@@ -101,10 +101,11 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
                 setPushNotificationInfo(taskSendParams.id, it)
             }
 
-            taskHandler.handle(task)
+            val handledTask = taskHandler.handle(task)
+            tasks[taskSendParams.id] = handledTask
 
             // Return the task with appropriate history length
-            val taskResult = appendTaskHistory(task, taskSendParams.historyLength)
+            val taskResult = appendTaskHistory(handledTask, taskSendParams.historyLength)
             SendTaskResponse(id = request.id, result = taskResult)
         } catch (e: Exception) {
             log.error("Error while sending task: ${e.message}")
@@ -276,10 +277,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
                 // Create a new task with updated history
                 val updatedHistory = task.history?.toMutableList() ?: mutableListOf()
                 updatedHistory.add(taskSendParams.message)
-
-                val updatedTask = task.copy(
-                    history = updatedHistory
-                )
+                val updatedTask = task.copy(history = updatedHistory)
                 tasks[taskSendParams.id] = updatedTask
                 updatedTask
             }

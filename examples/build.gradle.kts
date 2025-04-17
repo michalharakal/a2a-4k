@@ -6,6 +6,7 @@ dependencies {
     implementation(project(":a2a4k-models"))
     implementation(project(":a2a4k-client"))
     implementation(project(":a2a4k-server"))
+    implementation(libs.ktor.client.core)
     implementation(rootProject.libs.kotlinx.coroutines.slf4j)
     implementation(rootProject.libs.kotlinx.coroutines.jdk8)
     implementation(rootProject.libs.kotlinx.coroutines.reactor)

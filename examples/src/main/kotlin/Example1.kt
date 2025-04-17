@@ -34,9 +34,7 @@ class MyAgentTaskHandler : TaskHandler {
         val updatedStatus = TaskStatus(state = TaskState.completed)
 
         // Return the updated task
-        return task.copy(status = updatedStatus,
-            artifacts = listOf(responseArtifact)
-        )
+        return task.copy(status = updatedStatus, artifacts = listOf(responseArtifact))
     }
 
     private fun callYourAgent(message: Message?): String {
@@ -76,7 +74,7 @@ fun main() = runBlocking {
     // Create and start the A2A Server
     val server = A2AServer(
         host = "0.0.0.0",
-        port = 5000,
+        port = 5001,
         endpoint = "/",
         agentCard = agentCard,
         taskManager = taskManager
@@ -87,7 +85,7 @@ fun main() = runBlocking {
 
     delay(1_000)
 
-    val client = A2AClient(baseUrl = "http://localhost:5000")
+    val client = A2AClient(baseUrl = "http://localhost:5001")
 
     try {
         // Get the Agent's metadata
@@ -101,15 +99,15 @@ fun main() = runBlocking {
         )
 
         // Send a task to the Agent
-        val response = client.sendTask(taskId = "task-123",
+        val response = client.sendTask(
+            taskId = "task-123",
             sessionId = "session-456",
-            message = message)
+            message = message
+        )
 
         // Process the response
         if (response.result != null) {
-            val task = response.result
-            val responseMessage = task?.status?.message
-            println("Agent response: $responseMessage")
+            println("Agent response: $response")
         } else {
             println("Error: ${response.error?.message}")
         }

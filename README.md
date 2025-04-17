@@ -127,9 +127,7 @@ fun main() = runBlocking {
 
         // Process the response
         if (response.result != null) {
-            val task = response.result
-            val responseMessage = task.status.message
-            println("Agent response: $responseMessage")
+            println("Agent response: $response")
         } else {
             println("Error: ${response.error?.message}")
         }
