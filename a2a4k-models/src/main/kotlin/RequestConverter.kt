@@ -4,21 +4,28 @@
 package org.a2a4k.models
 
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 
 /**
  * Converter class for deserializing JSON strings to A2ARequest objects.
  */
 class RequestConverter {
 
-    private val json = Json { ignoreUnknownKeys = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        explicitNulls = false
+        serializersModule = SerializersModule {
+           polymorphicDefaultDeserializer(JsonRpcRequest::class) { UnknownRequest.serializer() }
+        }
+    }
 
     /**
      * Converts a JSON string to an A2ARequest object.
      *
      * @param jsonString The JSON string to convert
      * @return The deserialized A2ARequest object
-     * @throws IllegalArgumentException if the method is not supported
-     * @throws kotlinx.serialization.json.JsonDecodingException if the JSON is invalid
+     * @throws IllegalArgumentException if the JSON is invalid
      */
     fun fromJson(jsonString: String): JsonRpcRequest {
         try {

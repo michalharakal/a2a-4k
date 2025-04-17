@@ -43,9 +43,6 @@ class A2AClientTest {
                 streaming = true,
                 pushNotifications = true
             ),
-            authentication = Authentication(
-                type = "none"
-            ),
             defaultInputModes = listOf("text"),
             defaultOutputModes = listOf("text"),
             skills = emptyList()

@@ -14,7 +14,7 @@ data class AgentCard(
     val version: String,
     val documentationUrl: String? = null,
     val capabilities: Capabilities,
-    val authentication: Authentication,
+    val authentication: Authentication? = null,
     val defaultInputModes: List<String>,
     val defaultOutputModes: List<String>,
     val skills: List<Skill>

@@ -21,11 +21,13 @@ import org.a2a4k.models.GetTaskPushNotificationRequest
 import org.a2a4k.models.GetTaskRequest
 import org.a2a4k.models.InternalError
 import org.a2a4k.models.InvalidRequestError
+import org.a2a4k.models.MethodNotFoundError
 import org.a2a4k.models.RequestConverter
 import org.a2a4k.models.SendTaskRequest
 import org.a2a4k.models.SendTaskStreamingRequest
 import org.a2a4k.models.SetTaskPushNotificationRequest
 import org.a2a4k.models.TaskResubscriptionRequest
+import org.a2a4k.models.UnknownRequest
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicReference
 
@@ -78,6 +80,7 @@ class A2AServer(
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
+        explicitNulls = false
     }
 
     /**
@@ -129,7 +132,7 @@ class A2AServer(
                         is CancelTaskRequest -> taskManager.onCancelTask(jsonRpcRequest)
                         is SetTaskPushNotificationRequest -> taskManager.onSetTaskPushNotification(jsonRpcRequest)
                         is GetTaskPushNotificationRequest -> taskManager.onGetTaskPushNotification(jsonRpcRequest)
-
+                        is UnknownRequest -> ErrorResponse(id = jsonRpcRequest.id, error = MethodNotFoundError())
                         else -> null
                     }
                     if (result != null) {

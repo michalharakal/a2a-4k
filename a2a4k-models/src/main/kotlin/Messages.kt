@@ -39,27 +39,21 @@ sealed class Part {
 data class TextPart(
     val text: String,
     override val metadata: Map<String, String>
-) : Part() {
-    val type: String = "text"
-}
+) : Part()
 
 @Serializable
 @SerialName("file")
 data class FilePart(
     val file: FileData,
     override val metadata: Map<String, String>
-) : Part() {
-    val type: String = "file"
-}
+) : Part()
 
 @Serializable
 @SerialName("data")
 data class DataPart(
     val data: Map<String, String>,
     override val metadata: Map<String, String>
-) : Part() {
-    val type: String = "data"
-}
+) : Part()
 
 @Serializable
 data class FileData(

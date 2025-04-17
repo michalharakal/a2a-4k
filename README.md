@@ -31,7 +31,7 @@ class MyAgentTaskHandler : TaskHandler {
 
         // Create a response message
         val responseMessage = Message(
-            role = "assistant",
+            role = "agent",
             parts = listOf(TextPart(text = response)),
             metadata = null
         )

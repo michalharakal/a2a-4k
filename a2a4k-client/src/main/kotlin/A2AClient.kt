@@ -30,13 +30,13 @@ class A2AClient(
      * Example: "http://localhost:5000"
      */
     private val baseUrl: String,
-    
+
     /**
      * The endpoint path for the server's API.
      * Default is "/".
      */
     private val endpoint: String = "/",
-    
+
     /**
      * Custom HTTP client to use for requests.
      * If not provided, a default client will be created.
@@ -49,12 +49,17 @@ class A2AClient(
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
+        explicitNulls = false
     }
-    
+
     /**
      * The HTTP client used for making requests to the server.
      */
     private val client: HttpClient = httpClient ?: HttpClient(CIO) {
+        defaultRequest {
+            contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
+        }
         install(ContentNegotiation) {
             json(json)
         }
@@ -65,17 +70,17 @@ class A2AClient(
             socketTimeoutMillis = 60000
         }
     }
-    
+
     /**
      * The full URL for the API endpoint.
      */
     private val apiUrl = "$baseUrl$endpoint"
-    
+
     /**
      * The URL for retrieving the agent card.
      */
     private val agentCardUrl = "$baseUrl/.well-known/agent.json"
-    
+
     /**
      * Retrieves the agent card from the server.
      *
@@ -87,11 +92,11 @@ class A2AClient(
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to get agent card: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Retrieves a task by its ID.
      *
@@ -101,25 +106,28 @@ class A2AClient(
      * @return The response containing the requested task or an error if the task is not found.
      * @throws Exception if the request fails or the response cannot be parsed.
      */
-    suspend fun getTask(taskId: String, historyLength: Int = 10, requestId: String = generateRequestId()): GetTaskResponse {
+    suspend fun getTask(
+        taskId: String,
+        historyLength: Int = 10,
+        requestId: String = generateRequestId()
+    ): GetTaskResponse {
         val request = GetTaskRequest(
             id = requestId,
             params = TaskQueryParams(id = taskId, historyLength = historyLength)
         )
-        
+
         val response = client.post(apiUrl) {
-            contentType(ContentType.Application.Json)
             setBody(json.encodeToString(GetTaskRequest.serializer(), request))
         }
-        
+
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to get task: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Creates or updates a task.
      *
@@ -147,20 +155,19 @@ class A2AClient(
                 historyLength = historyLength
             )
         )
-        
+
         val response = client.post(apiUrl) {
-            contentType(ContentType.Application.Json)
             setBody(json.encodeToString(SendTaskRequest.serializer(), request))
         }
-        
+
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to send task: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Subscribes to streaming updates for a task.
      *
@@ -188,10 +195,9 @@ class A2AClient(
                 historyLength = historyLength
             )
         )
-        
+
         return flow {
             client.sse(apiUrl) {
-                contentType(ContentType.Application.Json)
                 setBody(json.encodeToString(SendTaskStreamingRequest.serializer(), request))
             }.collect { serverSentEvent ->
                 val responseBody = serverSentEvent.data
@@ -200,7 +206,7 @@ class A2AClient(
             }
         }
     }
-    
+
     /**
      * Attempts to cancel a task.
      *
@@ -214,20 +220,20 @@ class A2AClient(
             id = requestId,
             params = TaskIdParams(id = taskId)
         )
-        
+
         val response = client.post(apiUrl) {
             contentType(ContentType.Application.Json)
             setBody(json.encodeToString(CancelTaskRequest.serializer(), request))
         }
-        
+
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to cancel task: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Sets push notification configuration for a task.
      *
@@ -246,23 +252,23 @@ class A2AClient(
             id = requestId,
             params = TaskPushNotificationConfig(
                 id = taskId,
-                config = config
+                pushNotificationConfig = config
             )
         )
-        
+
         val response = client.post(apiUrl) {
             contentType(ContentType.Application.Json)
             setBody(json.encodeToString(SetTaskPushNotificationRequest.serializer(), request))
         }
-        
+
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to set task push notification: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Retrieves the push notification configuration for a task.
      *
@@ -279,20 +285,20 @@ class A2AClient(
             id = requestId,
             params = TaskIdParams(id = taskId)
         )
-        
+
         val response = client.post(apiUrl) {
             contentType(ContentType.Application.Json)
             setBody(json.encodeToString(GetTaskPushNotificationRequest.serializer(), request))
         }
-        
+
         if (response.status != HttpStatusCode.OK) {
             throw Exception("Failed to get task push notification: ${response.status}")
         }
-        
+
         val responseBody = response.bodyAsText()
         return json.decodeFromString(responseBody)
     }
-    
+
     /**
      * Resubscribes to a task to receive streaming updates.
      *
@@ -305,30 +311,29 @@ class A2AClient(
         taskId: String,
         requestId: String = generateRequestId()
     ): Flow<SendTaskStreamingResponse> {
-        val request = TaskResubscriptionRequest(
-            id = requestId,
-            params = TaskIdParams(id = taskId)
-        )
-        
+        val request = TaskResubscriptionRequest(id = requestId, params = TaskIdParams(id = taskId))
+
         return flow {
-            client.sse(apiUrl) {
+            client.sse( {
+                apiUrl
                 contentType(ContentType.Application.Json)
-                setBody(json.encodeToString(TaskResubscriptionRequest.serializer(), request))
-            }.collect { serverSentEvent ->
-                val responseBody = serverSentEvent.data
-                val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
-                emit(response)
-            }
+                setBody(json.encodeToString(JsonRpcRequest.serializer(), request))
+                incoming.collect { serverSentEvent ->
+                    val responseBody = serverSentEvent.data
+                    val response = json.decodeFromString<SendTaskStreamingResponse>(responseBody)
+                    emit(response)
+                }
+            })
         }
     }
-    
+
     /**
      * Closes the HTTP client and releases resources.
      */
     fun close() {
         client.close()
     }
-    
+
     /**
      * Generates a unique request ID.
      *

@@ -35,7 +35,6 @@ class RequestConverterTest {
         assertIs<CancelTaskRequest>(result)
         assertEquals("2.0", result.jsonrpc)
         assertEquals("123", result.id)
-        assertEquals("tasks/cancel", result.method)
         assertEquals("task-123", result.params.id)
     }
 
@@ -62,7 +61,6 @@ class RequestConverterTest {
         assertIs<GetTaskRequest>(result)
         assertEquals("2.0", result.jsonrpc)
         assertEquals("456", result.id)
-        assertEquals("tasks/get", result.method)
         assertEquals("task-456", result.params.id)
         assertEquals(10, result.params.historyLength)
     }

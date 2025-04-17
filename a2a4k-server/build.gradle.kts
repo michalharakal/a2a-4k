@@ -9,6 +9,7 @@ dependencies {
     implementation(libs.ktor.server.sse)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.server.sse)
+    implementation(libs.slf4j.api)
 
     // Test dependencies
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")

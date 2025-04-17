@@ -7,6 +7,7 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio.jvm)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.content.negotiation)
 
     // Test dependencies
     testImplementation(project(":a2a4k-server"))
