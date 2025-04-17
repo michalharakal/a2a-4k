@@ -113,10 +113,7 @@ fun main() = runBlocking {
         println("Connected to Agent: ${agentCard.name}")
 
         // Create a message to send to the Agent
-        val message = Message(
-            role = "user",
-            parts = listOf(TextPart(text = "Hello, Agent!"))
-        )
+        val message = "Hello, Agent!".toUserMessage()
 
         // Send a task to the Agent
         val response = client.sendTask(

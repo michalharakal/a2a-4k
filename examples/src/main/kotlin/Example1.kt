@@ -13,6 +13,7 @@ import org.a2a4k.models.Task
 import org.a2a4k.models.TaskState
 import org.a2a4k.models.TaskStatus
 import org.a2a4k.models.TextPart
+import org.a2a4k.models.toUserMessage
 
 
 // Custom TaskHandler that calls your Agent
@@ -93,10 +94,7 @@ fun main() = runBlocking {
         println("Connected to Agent: ${agentCard.name}")
 
         // Create a message to send to the Agent
-        val message = Message(
-            role = "user",
-            parts = listOf(TextPart(text = "Hello, Agent!")),
-        )
+        val message = "Hello, Agent!".toUserMessage()
 
         // Send a task to the Agent
         val response = client.sendTask(

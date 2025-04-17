@@ -142,9 +142,9 @@ class A2AClient(
      * @throws Exception if the request fails or the response cannot be parsed.
      */
     suspend fun sendTask(
-        taskId: String,
-        sessionId: String,
         message: Message,
+        taskId: String = "task::${UUID.randomUUID()}",
+        sessionId: String = "session::${UUID.randomUUID()}",
         historyLength: Int = 10,
         requestId: String = generateRequestId()
     ): SendTaskResponse {
