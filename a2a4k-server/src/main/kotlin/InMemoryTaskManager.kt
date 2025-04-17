@@ -44,7 +44,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation retrieves a task from the in-memory store by its ID.
      * If the task is not found, it returns an error response.
      */
@@ -61,7 +61,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation attempts to cancel a task in the in-memory store.
      * Currently, tasks are not cancelable, so it always returns a TaskNotCancelableError.
      * If the task is not found, it returns a TaskNotFoundError.
@@ -82,7 +82,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation creates or updates a task in the in-memory store.
      * If a push notification configuration is provided, it is stored as well.
      * If an error occurs during the operation, an InternalError is returned.
@@ -96,7 +96,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             val task = upsertTask(taskSendParams)
 
             // Set push notification if provided
-            taskSendParams.pushNotification?.let { 
+            taskSendParams.pushNotification?.let {
                 setPushNotificationInfo(taskSendParams.id, it)
             }
 
@@ -116,7 +116,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation creates or updates a task in the in-memory store and sets up
      * a subscription for streaming updates. It returns a flow of streaming responses
      * with task updates.
@@ -130,7 +130,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             val task = upsertTask(taskSendParams)
 
             // Set push notification if provided
-            taskSendParams.pushNotification?.let { 
+            taskSendParams.pushNotification?.let {
                 setPushNotificationInfo(taskSendParams.id, it)
             }
 
@@ -150,10 +150,12 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
         } catch (e: Exception) {
             log.error("Error while setting up task subscription: ${e.message}")
             return flow {
-                emit(SendTaskStreamingResponse(
-                    id = request.id,
-                    error = InternalError()
-                ))
+                emit(
+                    SendTaskStreamingResponse(
+                        id = request.id,
+                        error = InternalError()
+                    )
+                )
             }
         }
     }
@@ -192,15 +194,13 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
      * @param taskId The ID of the task
      * @return true if a push notification configuration exists, false otherwise
      */
-    private suspend fun hasPushNotificationInfo(taskId: String): Boolean {
-        lock.withLock {
-            return pushNotificationInfos.containsKey(taskId)
-        }
+    private fun hasPushNotificationInfo(taskId: String): Boolean {
+        return pushNotificationInfos.containsKey(taskId)
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation sets the push notification configuration for a task in the in-memory store.
      * If the task is not found or an error occurs, it returns an error response.
      */
@@ -222,7 +222,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation retrieves the push notification configuration for a task from the in-memory store.
      * If the task is not found, the configuration is not set, or an error occurs, it returns an error response.
      */
@@ -287,7 +287,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This implementation resubscribes to a task in the in-memory store and sets up
      * a subscription for streaming updates. It returns a flow of streaming responses
      * with task updates.
@@ -301,10 +301,12 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
                 val task = tasks[taskQueryParams.id]
                 if (task == null) {
                     return flow {
-                        emit(SendTaskStreamingResponse(
-                            id = request.id,
-                            error = TaskNotFoundError()
-                        ))
+                        emit(
+                            SendTaskStreamingResponse(
+                                id = request.id,
+                                error = TaskNotFoundError()
+                            )
+                        )
                     }
                 }
 
@@ -325,10 +327,12 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
         } catch (e: Exception) {
             log.error("Error while resubscribing to task: ${e.message}")
             flow {
-                emit(SendTaskStreamingResponse(
-                    id = request.id,
-                    error = InternalError()
-                ))
+                emit(
+                    SendTaskStreamingResponse(
+                        id = request.id,
+                        error = InternalError()
+                    )
+                )
             }
         }
     }

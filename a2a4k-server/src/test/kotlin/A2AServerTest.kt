@@ -236,7 +236,7 @@ class A2AServerTest {
         val message = Message(role = "user", parts = listOf(textPart), metadata = null)
 
         // Create task
-        val sendRequest: JsonRpcRequest = SendTaskRequest(
+        val sendRequest = SendTaskRequest(
             id = "send-req-123",
             params = TaskSendParams(
                 id = taskId,
@@ -259,7 +259,7 @@ class A2AServerTest {
 
         // When - Set push notification
         val setPushResponse = client.post(apiUrl) {
-            setBody(json.encodeToString(SetTaskPushNotificationRequest.serializer(), setPushRequest))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), setPushRequest))
         }
 
         // Then - Set push notification response
@@ -280,7 +280,7 @@ class A2AServerTest {
         )
 
         val getPushResponse = client.post(apiUrl) {
-            setBody(json.encodeToString(GetTaskPushNotificationRequest.serializer(), getPushRequest))
+            setBody(json.encodeToString(JsonRpcRequest.serializer(), getPushRequest))
         }
 
         // Then - Get push notification response
