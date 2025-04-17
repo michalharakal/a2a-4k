@@ -267,7 +267,7 @@ class InMemoryTaskManager(private val taskHandler: TaskHandler) : TaskManager {
             if (task == null) {
                 val newTask = Task(
                     id = taskSendParams.id,
-                    sessionId = UUID.randomUUID().toString(),
+                    sessionId = taskSendParams.sessionId ?: UUID.randomUUID().toString(),
                     status = TaskStatus(state = TaskState.submitted),
                     history = listOf(taskSendParams.message)
                 )

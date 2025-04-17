@@ -46,7 +46,7 @@ data class TaskArtifactUpdateEvent(
 @Serializable
 data class TaskSendParams(
     val id: String,
-    val sessionId: String,
+    val sessionId: String? = null,
     val message: Message,
     val historyLength: Int? = null,
     val pushNotification: PushNotificationConfig? = null,
