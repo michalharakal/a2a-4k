@@ -20,7 +20,7 @@ sealed class JsonRpcRequest {
 }
 
 @Serializable
-data class UnknownRequest(
+data class UnknownMethodRequest(
     override val jsonrpc: String = "2.0",
     override val id: String? = null,
 ) : JsonRpcRequest()

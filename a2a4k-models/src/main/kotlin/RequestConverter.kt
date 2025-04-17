@@ -16,7 +16,7 @@ class RequestConverter {
         encodeDefaults = true
         explicitNulls = false
         serializersModule = SerializersModule {
-           polymorphicDefaultDeserializer(JsonRpcRequest::class) { UnknownRequest.serializer() }
+           polymorphicDefaultDeserializer(JsonRpcRequest::class) { UnknownMethodRequest.serializer() }
         }
     }
 

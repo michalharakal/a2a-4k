@@ -13,7 +13,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
 import org.a2a4k.models.AgentCard
 import org.a2a4k.models.CancelTaskRequest
 import org.a2a4k.models.ErrorResponse
@@ -27,7 +26,7 @@ import org.a2a4k.models.SendTaskRequest
 import org.a2a4k.models.SendTaskStreamingRequest
 import org.a2a4k.models.SetTaskPushNotificationRequest
 import org.a2a4k.models.TaskResubscriptionRequest
-import org.a2a4k.models.UnknownRequest
+import org.a2a4k.models.UnknownMethodRequest
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicReference
 
@@ -132,7 +131,7 @@ class A2AServer(
                         is CancelTaskRequest -> taskManager.onCancelTask(jsonRpcRequest)
                         is SetTaskPushNotificationRequest -> taskManager.onSetTaskPushNotification(jsonRpcRequest)
                         is GetTaskPushNotificationRequest -> taskManager.onGetTaskPushNotification(jsonRpcRequest)
-                        is UnknownRequest -> ErrorResponse(id = jsonRpcRequest.id, error = MethodNotFoundError())
+                        is UnknownMethodRequest -> ErrorResponse(id = jsonRpcRequest.id, error = MethodNotFoundError())
                         else -> null
                     }
                     if (result != null) {

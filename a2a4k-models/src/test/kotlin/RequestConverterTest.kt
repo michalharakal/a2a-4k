@@ -78,9 +78,9 @@ class RequestConverterTest {
         """.trimIndent()
 
         // When/Then
-        val exception = assertThrows<IllegalArgumentException> {
-            converter.fromJson(json)
-        }
+
+        val result = converter.fromJson(json)
+        assertIs<UnknownMethodRequest>(result)
     }
 
     @Test
@@ -95,9 +95,9 @@ class RequestConverterTest {
         """.trimIndent()
 
         // When/Then
-        val exception = assertThrows<IllegalArgumentException> {
-            converter.fromJson(json)
-        }
+
+        val result = converter.fromJson(json)
+        assertIs<UnknownMethodRequest>(result)
     }
 
     @Test
