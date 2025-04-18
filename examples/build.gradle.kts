@@ -2,10 +2,18 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-dependencies {
-    implementation(project(":a2a4k-models"))
-    implementation(project(":a2a4k-client"))
-    implementation(project(":a2a4k-server-ktor"))
-    implementation(libs.ktor.client.core)
-    implementation(libs.bundles.kotlinx)
+kotlin {
+    jvm()
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+
+                implementation(project(":a2a4k-models"))
+                implementation(project(":a2a4k-client"))
+                implementation(project(":a2a4k-server-ktor"))
+                implementation(libs.ktor.client.core)
+                implementation(libs.bundles.kotlinx)
+            }
+        }
+    }
 }

@@ -2,11 +2,22 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-dependencies {
-    implementation(libs.kotlinx.serialization.json)
+kotlin {
+    jvm()
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
+            }
+        }
 
-    // Test dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
+        val jvmTest by getting {
+            dependencies {
+                implementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+                implementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+                implementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
+            }
+        }
+
+    }
 }
