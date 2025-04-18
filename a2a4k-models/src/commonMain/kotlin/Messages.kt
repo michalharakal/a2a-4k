@@ -21,7 +21,7 @@ data class Artifact(
 
 @Serializable
 data class Message(
-    val role: String, // "user" | "agent"
+    val role: String,
     val parts: List<Part>,
     val metadata: Map<String, String> = emptyMap(),
 )
@@ -58,7 +58,7 @@ data class DataPart(
 data class FileData(
     val name: String? = null,
     val mimeType: String? = null,
-    val bytes: String? = null, // base64 encoded content
+    val bytes: String? = null,
     val uri: String? = null,
 )
 

@@ -10,7 +10,9 @@ kotlin {
                 implementation(project(":a2a4k-models"))
                 implementation(libs.bundles.kotlinx)
                 implementation(libs.ktor.server.sse)
-                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.slf4j.api)
             }
         }
@@ -19,19 +21,15 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.server.core.jvm)
                 implementation(libs.ktor.server.netty.jvm)
+                implementation(libs.ktor.client.cio.jvm)
             }
         }
-
 
         val jvmTest by getting {
             dependencies {
                 implementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
                 implementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
                 implementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.cio.jvm)
-                implementation(libs.ktor.serialization.kotlinx.json)
-                implementation(libs.ktor.client.content.negotiation)
                 implementation("io.mockk:mockk:1.13.10")
             }
         }
