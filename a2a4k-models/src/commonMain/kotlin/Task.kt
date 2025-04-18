@@ -34,14 +34,14 @@ data class TaskStatusUpdateEvent(
     val id: String,
     val status: TaskStatus,
     val final: Boolean,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
 ) : TaskStreamingResult()
 
 @Serializable
 data class TaskArtifactUpdateEvent(
     val id: String,
     val artifact: Artifact,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
 ) : TaskStreamingResult()
 
 @Serializable
@@ -51,7 +51,7 @@ data class TaskSendParams(
     val message: Message,
     val historyLength: Int? = null,
     val pushNotification: PushNotificationConfig? = null,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
 )
 
 @Serializable

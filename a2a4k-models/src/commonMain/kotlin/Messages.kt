@@ -13,7 +13,7 @@ data class Artifact(
     val name: String? = null,
     val description: String? = null,
     val parts: List<Part>,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
     val index: Int? = null,
     val append: Boolean? = null,
     val lastChunk: Boolean? = null,

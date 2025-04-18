@@ -155,7 +155,6 @@ class BasicTaskManager(
 
             // Return the flow of events
             return dequeueEventsForSse(request.id!!, task.id, sseEventQueue)
-
         } catch (e: Exception) {
             log.error("Error while setting up task subscription: ${e.message}")
             return flow { emit(SendTaskStreamingResponse(id = request.id, error = InternalError())) }
@@ -186,7 +185,7 @@ class BasicTaskManager(
     /**
      * {@inheritDoc}
      *
-     * This implementation sets the push notification configuration for a task in the in-memory store.
+     * This implementation sets the push notification configuration for a task.
      * If the task is not found or an error occurs, it returns an error response.
      */
     override suspend fun onSetTaskPushNotification(request: SetTaskPushNotificationRequest): SetTaskPushNotificationResponse {
@@ -198,17 +197,14 @@ class BasicTaskManager(
             SetTaskPushNotificationResponse(id = request.id, result = taskNotificationParams)
         } catch (e: Exception) {
             log.error("Error while setting push notification info: ${e.message}")
-            SetTaskPushNotificationResponse(
-                id = request.id,
-                error = InternalError(),
-            )
+            SetTaskPushNotificationResponse(id = request.id, error = InternalError())
         }
     }
 
     /**
      * {@inheritDoc}
      *
-     * This implementation retrieves the push notification configuration for a task from the in-memory store.
+     * This implementation retrieves the push notification configuration for a task.
      * If the task is not found, the configuration is not set, or an error occurs, it returns an error response.
      */
     override suspend fun onGetTaskPushNotification(request: GetTaskPushNotificationRequest): GetTaskPushNotificationResponse {
@@ -223,17 +219,11 @@ class BasicTaskManager(
                     result = TaskPushNotificationConfig(id = taskParams.id, pushNotificationConfig = notificationInfo),
                 )
             } else {
-                GetTaskPushNotificationResponse(
-                    id = request.id,
-                    error = InternalError(),
-                )
+                GetTaskPushNotificationResponse(id = request.id, error = InternalError())
             }
         } catch (e: Exception) {
             log.error("Error while getting push notification info: ${e.message}")
-            GetTaskPushNotificationResponse(
-                id = request.id,
-                error = InternalError(),
-            )
+            GetTaskPushNotificationResponse(id = request.id, error = InternalError())
         }
     }
 
@@ -289,7 +279,6 @@ class BasicTaskManager(
 
             // Return the flow of events
             return dequeueEventsForSse(request.id, task.id, sseEventQueue)
-
         } catch (e: Exception) {
             log.error("Error while resubscribing to task: ${e.message}")
             return flow {

@@ -84,12 +84,12 @@ data class SendTaskStreamingRequest(
 @Serializable
 data class TaskIdParams(
     val id: String,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
 )
 
 @Serializable
 data class TaskQueryParams(
     val id: String,
     val historyLength: Int? = null,
-    val metadata: Map<String, String>? = null,
+    val metadata: Map<String, String> = emptyMap(),
 )
