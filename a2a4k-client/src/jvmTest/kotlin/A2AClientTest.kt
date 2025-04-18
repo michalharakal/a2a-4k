@@ -33,11 +33,11 @@ class A2AClientTest {
             version = "1.0.0",
             capabilities = Capabilities(
                 streaming = true,
-                pushNotifications = true
+                pushNotifications = true,
             ),
             defaultInputModes = listOf("text"),
             defaultOutputModes = listOf("text"),
-            skills = emptyList()
+            skills = emptyList(),
         )
 
         // Create task manager
@@ -49,7 +49,7 @@ class A2AClientTest {
             port = serverPort,
             endpoint = apiEndpoint,
             agentCard = agentCard,
-            taskManager = taskManager
+            taskManager = taskManager,
         )
 
         // Start server in a separate thread
@@ -60,7 +60,7 @@ class A2AClientTest {
         // Create client
         client = A2AClient(
             baseUrl = serverUrl,
-            endpoint = apiEndpoint
+            endpoint = apiEndpoint,
         )
 
         // Wait for server to start

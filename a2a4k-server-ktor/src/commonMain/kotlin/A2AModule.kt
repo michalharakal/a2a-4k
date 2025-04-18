@@ -13,7 +13,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
 import org.a2a4k.models.AgentCard
 import org.a2a4k.models.CancelTaskRequest
 import org.a2a4k.models.ErrorResponse
@@ -23,7 +22,6 @@ import org.a2a4k.models.InternalError
 import org.a2a4k.models.InvalidRequestError
 import org.a2a4k.models.JsonParseError
 import org.a2a4k.models.MethodNotFoundError
-import org.a2a4k.models.RequestConverter
 import org.a2a4k.models.SendTaskRequest
 import org.a2a4k.models.SendTaskStreamingRequest
 import org.a2a4k.models.SetTaskPushNotificationRequest
@@ -32,8 +30,6 @@ import org.a2a4k.models.UnknownMethodRequest
 import org.a2a4k.models.toJson
 import org.a2a4k.models.toJsonRpcRequest
 import org.slf4j.LoggerFactory
-import java.util.concurrent.atomic.AtomicReference
-
 
 /**
  * Configures the application routing for the A2A server.

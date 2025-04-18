@@ -14,11 +14,10 @@ fun String.toUserMessage() = Message(
     parts = listOf(TextPart(text = this)),
 )
 
-
 /**
  * Converter class for deserializing JSON strings to A2ARequest objects.
  */
-private val json = Json {
+val a2aJson = Json {
     ignoreUnknownKeys = true
     encodeDefaults = true
     coerceInputValues = true
@@ -28,8 +27,9 @@ private val json = Json {
     }
 }
 
-fun String.toJsonRpcRequest() = json.decodeFromString<JsonRpcRequest>(this)
-fun String.toJsonRpcResponse() = json.decodeFromString<JsonRpcResponse>(this)
-fun JsonRpcRequest.toJson() = json.encodeToString(JsonRpcRequest.serializer(), this)
-fun JsonRpcResponse.toJson() = json.encodeToString(JsonRpcResponse.serializer(), this)
-fun AgentCard.toJson() = json.encodeToString(AgentCard.serializer(), this)
+fun String.toJsonRpcRequest() = a2aJson.decodeFromString<JsonRpcRequest>(this)
+fun String.toJsonRpcResponse() = a2aJson.decodeFromString<JsonRpcResponse>(this)
+fun JsonRpcRequest.toJson() = a2aJson.encodeToString(JsonRpcRequest.serializer(), this)
+fun JsonRpcResponse.toJson() = a2aJson.encodeToString(JsonRpcResponse.serializer(), this)
+fun AgentCard.toJson() = a2aJson.encodeToString(AgentCard.serializer(), this)
+fun Task.toJson() = a2aJson.encodeToString(Task.serializer(), this)

@@ -67,7 +67,7 @@ fun main() = runBlocking {
         capabilities = capabilities,
         defaultInputModes = listOf("text"),
         defaultOutputModes = listOf("text"),
-        skills = listOf(/* Define your Agent's skills here */),
+        skills = listOf(),
     )
 
     // Create and start the A2A Server

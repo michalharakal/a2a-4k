@@ -26,7 +26,7 @@ data class Task(
 data class TaskStatus(
     val state: TaskState,
     val message: Message? = null,
-    val timestamp: String = Instant.now().toString(), // TODO
+    val timestamp: String = Instant.now().toString(),
 )
 
 @Serializable

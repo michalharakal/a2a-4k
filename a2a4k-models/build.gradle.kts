@@ -18,6 +18,5 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
             }
         }
-
     }
 }
