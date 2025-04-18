@@ -13,7 +13,7 @@ group = "org.a2a4k"
 version = project.findProperty("version") as String
 
 plugins {
-    kotlin("jvm") version "2.1.10" apply false
+    kotlin("multiplatform") version "2.1.10" apply false
     kotlin("plugin.serialization") version "2.1.10" apply false
     id("org.jetbrains.dokka") version "2.0.0"
     id("org.cyclonedx.bom") version "2.0.0"
@@ -27,7 +27,7 @@ subprojects {
     group = "org.a2a4k"
 
     apply(plugin = "org.jetbrains.dokka")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.kotlin.multiplatform")
     apply(plugin = "kotlinx-serialization")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     apply(plugin = "org.jetbrains.kotlinx.kover")
