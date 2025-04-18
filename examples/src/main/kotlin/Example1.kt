@@ -15,7 +15,6 @@ import org.a2a4k.models.TaskStatus
 import org.a2a4k.models.TextPart
 import org.a2a4k.models.toUserMessage
 
-
 // Custom TaskHandler that calls your Agent
 class MyAgentTaskHandler : TaskHandler {
     override fun handle(task: Task): Task {
@@ -32,7 +31,7 @@ class MyAgentTaskHandler : TaskHandler {
         )
 
         // Update the task status
-        val updatedStatus = TaskStatus(state = TaskState.completed)
+        val updatedStatus = TaskStatus(state = TaskState.COMPLETED)
 
         // Return the updated task
         return task.copy(status = updatedStatus, artifacts = listOf(responseArtifact))
@@ -46,7 +45,6 @@ class MyAgentTaskHandler : TaskHandler {
 }
 
 fun main() = runBlocking {
-
 // Create your TaskHandler
     val taskHandler = MyAgentTaskHandler()
 
@@ -57,7 +55,7 @@ fun main() = runBlocking {
     val capabilities = Capabilities(
         streaming = true,
         pushNotifications = true,
-        stateTransitionHistory = true
+        stateTransitionHistory = true,
     )
 
 // Create an AgentCard for your Agent
@@ -69,7 +67,7 @@ fun main() = runBlocking {
         capabilities = capabilities,
         defaultInputModes = listOf("text"),
         defaultOutputModes = listOf("text"),
-        skills = listOf(/* Define your Agent's skills here */)
+        skills = listOf(/* Define your Agent's skills here */),
     )
 
     // Create and start the A2A Server
@@ -78,7 +76,7 @@ fun main() = runBlocking {
         port = 5001,
         endpoint = "/",
         agentCard = agentCard,
-        taskManager = taskManager
+        taskManager = taskManager,
     )
 
     // Start the server
@@ -100,7 +98,7 @@ fun main() = runBlocking {
         val response = client.sendTask(
             taskId = "task-123",
             sessionId = "session-456",
-            message = message
+            message = message,
         )
 
         // Process the response

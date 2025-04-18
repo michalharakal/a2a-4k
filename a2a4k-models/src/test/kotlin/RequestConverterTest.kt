@@ -10,8 +10,6 @@ import kotlin.test.assertIs
 
 class RequestConverterTest {
 
-    private val converter = RequestConverter()
-
     @Test
     fun `test fromJson with valid CancelTaskRequest`() {
         // Given
@@ -28,7 +26,7 @@ class RequestConverterTest {
         """.trimIndent()
 
         // When
-        val result = converter.fromJson(json)
+        val result = json.toJsonRpcRequest()
 
         // Then
         assertIs<CancelTaskRequest>(result)
@@ -54,7 +52,7 @@ class RequestConverterTest {
         """.trimIndent()
 
         // When
-        val result = converter.fromJson(json)
+        val result = json.toJsonRpcRequest()
 
         // Then
         assertIs<GetTaskRequest>(result)
@@ -78,7 +76,7 @@ class RequestConverterTest {
 
         // When/Then
 
-        val result = converter.fromJson(json)
+        val result = json.toJsonRpcRequest()
         assertIs<UnknownMethodRequest>(result)
     }
 
@@ -95,7 +93,7 @@ class RequestConverterTest {
 
         // When/Then
 
-        val result = converter.fromJson(json)
+        val result = json.toJsonRpcRequest()
         assertIs<UnknownMethodRequest>(result)
     }
 
@@ -115,7 +113,7 @@ class RequestConverterTest {
 
         // When/Then
         assertThrows<IllegalArgumentException> {
-            converter.fromJson(json)
+            json.toJsonRpcRequest()
         }
     }
 }

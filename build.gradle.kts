@@ -67,12 +67,12 @@ subprojects {
             pom {
                 name = "A2A4K"
                 description = "ARC is an AI framework."
-                url = "https://github.com/eclipse-lmos/arc"
+                url = "https://github.com/a2a-4k/a2a-4k"
                 licenses {
                     license {
                         name = "Apache-2.0"
                         distribution = "repo"
-                        url = "https://github.com/eclipse-lmos/arc/blob/main/LICENSES/Apache-2.0.txt"
+                        url = "https://github.com/a2a-4k/a2a-4k/blob/main/LICENSES/Apache-2.0.txt"
                     }
                 }
                 developers {
@@ -81,24 +81,9 @@ subprojects {
                         name = "Patrick Whelan"
                         email = "opensource@telekom.de"
                     }
-                    developer {
-                        id = "bharat_bhushan"
-                        name = "Bharat Bhushan"
-                        email = "opensource@telekom.de"
-                    }
-                    developer {
-                        id = "merrenfx"
-                        name = "Max Erren"
-                        email = "opensource@telekom.de"
-                    }
-                    developer {
-                        id = "jas34"
-                        name = "Jasbir Singh"
-                        email = "jasbirsinghkamboj@gmail.com"
-                    }
                 }
                 scm {
-                    url = "https://github.com/eclipse-lmos/arc.git"
+                    url = "https://github.com/a2a-4k/a2a-4k.git"
                 }
             }
 
@@ -129,6 +114,7 @@ subprojects {
 dependencies {
     kover(project("a2a4k-models"))
     kover(project("a2a4k-server"))
+    kover(project("a2a4k-server-ktor"))
     kover(project("a2a4k-client"))
 }
 

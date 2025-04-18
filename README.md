@@ -36,7 +36,7 @@ class MyAgentTaskHandler : TaskHandler {
         )
 
         // Update the task status
-        val updatedStatus = TaskStatus(state = TaskState.completed)
+        val updatedStatus = TaskStatus(state = TaskState.COMPLETED)
 
         // Return the updated task
         return task.copy(status = updatedStatus,

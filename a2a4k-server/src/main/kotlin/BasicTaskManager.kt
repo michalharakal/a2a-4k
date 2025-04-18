@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k
 
+import io.ktor.http.*
+import io.ktor.server.application.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -240,7 +242,7 @@ class BasicTaskManager(
             val newTask = Task(
                 id = taskSendParams.id,
                 sessionId = taskSendParams.sessionId ?: UUID.randomUUID().toString(),
-                status = TaskStatus(state = TaskState.submitted),
+                status = TaskStatus(state = TaskState.SUBMITTED),
                 history = listOf(taskSendParams.message),
             )
             taskStorage.store(newTask)

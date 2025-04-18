@@ -68,7 +68,7 @@ class BasicTaskManagerTest {
         assertNull(response.error)
         assertEquals(taskId, response.result?.id)
         assertEquals(sessionId, response.result?.sessionId)
-        assertEquals(TaskState.submitted, response.result?.status?.state)
+        assertEquals(TaskState.SUBMITTED, response.result?.status?.state)
         assertEquals(1, response.result?.history?.size)
     }
 
@@ -115,7 +115,7 @@ class BasicTaskManagerTest {
         assertNull(response.error)
         assertEquals(taskId, response.result?.id)
         assertEquals(sessionId, response.result?.sessionId)
-        assertEquals(TaskState.submitted, response.result?.status?.state)
+        assertEquals(TaskState.SUBMITTED, response.result?.status?.state)
         assertEquals(2, response.result?.history?.size)
     }
 
@@ -288,7 +288,7 @@ class BasicTaskManagerTest {
         assertNotNull(firstResponse.result)
         assertNull(firstResponse.error)
         assertEquals(taskId, (firstResponse.result as TaskStatusUpdateEvent).id)
-        assertEquals(TaskState.submitted, (firstResponse.result as TaskStatusUpdateEvent).status.state)
+        assertEquals(TaskState.SUBMITTED, (firstResponse.result as TaskStatusUpdateEvent).status.state)
     }
 
     @Test

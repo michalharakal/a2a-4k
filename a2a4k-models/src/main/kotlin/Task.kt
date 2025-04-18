@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k.models
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
 
@@ -55,11 +56,24 @@ data class TaskSendParams(
 
 @Serializable
 enum class TaskState {
-    submitted,
-    working,
-    `input-required`,
-    completed,
-    canceled,
-    failed,
-    unknown,
+    @SerialName("submitted")
+    SUBMITTED,
+
+    @SerialName("working")
+    WORKING,
+
+    @SerialName("input-required")
+    INPUT_REQUIRED,
+
+    @SerialName("completed")
+    COMPLETED,
+
+    @SerialName("canceled")
+    CANCELED,
+
+    @SerialName("failed")
+    FAILED,
+
+    @SerialName("unknown")
+    UNKNOWN,
 }

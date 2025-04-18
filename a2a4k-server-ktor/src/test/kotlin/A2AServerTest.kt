@@ -174,7 +174,7 @@ class A2AServerTest {
         assertNull(sendTaskResponse.error)
         assertEquals(taskId, sendTaskResponse.result?.id)
         assertEquals(sessionId, sendTaskResponse.result?.sessionId)
-        assertEquals(TaskState.submitted, sendTaskResponse.result?.status?.state)
+        assertEquals(TaskState.SUBMITTED, sendTaskResponse.result?.status?.state)
         assertEquals(1, sendTaskResponse.result?.history?.size)
 
         // When - Get task
@@ -197,7 +197,7 @@ class A2AServerTest {
         assertNull(getTaskResponse.error)
         assertEquals(taskId, getTaskResponse.result?.id)
         assertEquals(sessionId, getTaskResponse.result?.sessionId)
-        assertEquals(TaskState.submitted, getTaskResponse.result?.status?.state)
+        assertEquals(TaskState.SUBMITTED, getTaskResponse.result?.status?.state)
         assertEquals(1, getTaskResponse.result?.history?.size)
     }
 
