@@ -4,19 +4,15 @@
 package org.a2a4k
 
 import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.core.*
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.json.Json
 import org.a2a4k.models.*
 import java.util.UUID
 
@@ -41,7 +37,9 @@ class A2AClient(
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
         }
-        install(SSE)
+        install(SSE) {
+            maxReconnectionAttempts = 5
+        }
         install(HttpTimeout) {
             requestTimeoutMillis = 30000
             connectTimeoutMillis = 15000
@@ -177,6 +175,15 @@ class A2AClient(
                 val responseBody = serverSentEvent.data ?: return@collect
                 val response = a2aJson.decodeFromString<SendTaskStreamingResponse>(responseBody)
                 emit(response)
+                when (val result = response.result) {
+                    is TaskArtifactUpdateEvent -> {}
+
+                    is TaskStatusUpdateEvent -> {
+                        if (result.final) cancel()
+                    }
+
+                    null -> {}
+                }
             }
         }
     }

@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k
 
-import io.ktor.http.*
-import io.ktor.server.application.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +28,6 @@ class BasicTaskManager(
     private val taskStorage: TaskStorage = InMemoryTaskStorage(),
 ) : TaskManager {
 
-    /** Logger for this class */
     private val log = LoggerFactory.getLogger(this::class.java)
 
     /** Map of task IDs to lists of subscribers for server-sent events */

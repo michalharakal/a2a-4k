@@ -5,8 +5,6 @@ package org.a2a4k
 
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -49,37 +47,37 @@ private val log = LoggerFactory.getLogger(A2AServer::class.java)
 fun Application.a2aModule(endpoint: String, taskManager: TaskManager, agentCard: AgentCard) {
     install(SSE)
     routing {
+        sse {
+            try {
+                val streamingResult = when (val jsonRpcRequest = call.receiveText().toJsonRpcRequest()) {
+                    is SendTaskStreamingRequest -> taskManager.onSendTaskSubscribe(jsonRpcRequest)
+                    is TaskResubscriptionRequest -> taskManager.onResubscribeToTask(jsonRpcRequest)
+                    else -> throw IllegalArgumentException("Unexpected request type: ${jsonRpcRequest::class.java}")
+                }
+
+                streamingResult.collect {
+                    send(ServerSentEvent(it.toJson()))
+                }
+            } catch (e: Exception) {
+                handleException(call, e)
+            }
+        }
         post(endpoint) {
             try {
-                val body = call.receiveText()
-                val result = when (val jsonRpcRequest = body.toJsonRpcRequest()) {
+                val result = when (val jsonRpcRequest = call.receiveText().toJsonRpcRequest()) {
                     is GetTaskRequest -> taskManager.onGetTask(jsonRpcRequest)
                     is SendTaskRequest -> taskManager.onSendTask(jsonRpcRequest)
                     is CancelTaskRequest -> taskManager.onCancelTask(jsonRpcRequest)
                     is SetTaskPushNotificationRequest -> taskManager.onSetTaskPushNotification(jsonRpcRequest)
                     is GetTaskPushNotificationRequest -> taskManager.onGetTaskPushNotification(jsonRpcRequest)
                     is UnknownMethodRequest -> ErrorResponse(id = jsonRpcRequest.id, error = MethodNotFoundError())
-                    else -> null
+                    else -> throw IllegalArgumentException("Unexpected request type: ${jsonRpcRequest::class.java}")
                 }
-                if (result != null) {
-                    call.respondText(
-                        result.toJson(),
-                        contentType = ContentType.Application.Json,
-                        status = HttpStatusCode.OK,
-                    )
-                } else {
-                    val streamingResult = when (val jsonRpcRequest = body.toJsonRpcRequest()) {
-                        is SendTaskStreamingRequest -> taskManager.onSendTaskSubscribe(jsonRpcRequest)
-                        is TaskResubscriptionRequest -> taskManager.onResubscribeToTask(jsonRpcRequest)
-                        else -> throw IllegalArgumentException("Unexpected request type: ${jsonRpcRequest::class.java}")
-                    }
-
-                    sse {
-                        streamingResult.collect {
-                            send(ServerSentEvent(it.toJson()))
-                        }
-                    }
-                }
+                call.respondText(
+                    result.toJson(),
+                    contentType = ContentType.Application.Json,
+                    status = HttpStatusCode.OK,
+                )
             } catch (e: Exception) {
                 handleException(call, e)
             }
