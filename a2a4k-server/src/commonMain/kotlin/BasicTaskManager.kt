@@ -3,16 +3,16 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k
 
-import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.a2a4k.models.*
 import org.a2a4k.models.GetTaskResponse
+import org.a2a4k.notifications.BasicNotificationPublisher
+import org.a2a4k.notifications.NotificationPublisher
 import org.slf4j.LoggerFactory
 import java.util.*
+import java.util.Collections.synchronizedList
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -26,15 +26,13 @@ import java.util.concurrent.ConcurrentHashMap
 class BasicTaskManager(
     private val taskHandler: TaskHandler,
     private val taskStorage: TaskStorage = InMemoryTaskStorage(),
+    private val notificationPublisher: NotificationPublisher? = BasicNotificationPublisher(),
 ) : TaskManager {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
     /** Map of task IDs to lists of subscribers for server-sent events */
     private val taskSseSubscribers: MutableMap<String, MutableList<Channel<Any>>> = ConcurrentHashMap()
-
-    /** Mutex for synchronizing access to the subscribers map */
-    private val subscriberLock = Mutex()
 
     /**
      * {@inheritDoc}
@@ -90,8 +88,14 @@ class BasicTaskManager(
                 setPushNotificationInfo(taskSendParams.id, it)
             }
 
+            // Send Task to Agent
             val handledTask = taskHandler.handle(task)
             taskStorage.store(handledTask)
+
+            // Send push notification if configured
+            taskStorage.fetchNotificationConfig(task.id)?.let {
+                notificationPublisher?.publish(handledTask, it)
+            }
 
             // Return the task with appropriate history length
             val taskResult = appendTaskHistory(handledTask, taskSendParams.historyLength)
@@ -108,7 +112,7 @@ class BasicTaskManager(
     /**
      * {@inheritDoc}
      *
-     * This implementation creates or updates a task in the in-memory store and sets up
+     * This implementation creates or updates a task and sets up
      * a subscription for streaming updates. It returns a flow of streaming responses
      * with task updates.
      */
@@ -129,25 +133,32 @@ class BasicTaskManager(
             val sseEventQueue = setupSseConsumer(taskSendParams.id)
 
             // Send initial task status update
-            val initialStatusEvent = TaskStatusUpdateEvent(
-                id = task.id,
-                status = task.status,
-                final = false,
-            )
-            enqueueEventsForSse(task.id, initialStatusEvent)
+            val initialStatusEvent = TaskStatusUpdateEvent(id = task.id, status = task.status, final = false)
+            sendSseEvent(task.id, initialStatusEvent)
+
+            // Send Task to Agent
+            val handledTask = taskHandler.handle(task)
+            taskStorage.store(handledTask)
+
+            // Send push notification if configured
+            taskStorage.fetchNotificationConfig(task.id)?.let {
+                notificationPublisher?.publish(handledTask, it)
+            }
+
+            // Send task status update
+            task.artifacts?.forEach { artifact ->
+                sendSseEvent(task.id, TaskArtifactUpdateEvent(task.id, artifact = artifact))
+            }
+
+            // Send final task status update
+            sendSseEvent(task.id, TaskStatusUpdateEvent(status = task.status, id = task.id, final = true))
 
             // Return the flow of events
-            return dequeueEventsForSse(request.id ?: "", task.id, sseEventQueue)
+            return dequeueEventsForSse(request.id!!, task.id, sseEventQueue)
+
         } catch (e: Exception) {
             log.error("Error while setting up task subscription: ${e.message}")
-            return flow {
-                emit(
-                    SendTaskStreamingResponse(
-                        id = request.id,
-                        error = InternalError(),
-                    ),
-                )
-            }
+            return flow { emit(SendTaskStreamingResponse(id = request.id, error = InternalError())) }
         }
     }
 
@@ -264,35 +275,24 @@ class BasicTaskManager(
     override suspend fun onResubscribeToTask(request: TaskResubscriptionRequest): Flow<SendTaskStreamingResponse> {
         log.info("Resubscribing to task ${request.params.id}")
         val taskQueryParams: TaskQueryParams = request.params
-        return try {
+
+        try {
             val task = taskStorage.fetch(taskQueryParams.id)
-            if (task == null) {
-                return flow {
-                    emit(
-                        SendTaskStreamingResponse(
-                            id = request.id,
-                            error = TaskNotFoundError(),
-                        ),
-                    )
-                }
-            }
+                ?: return flow { emit(SendTaskStreamingResponse(id = request.id, error = TaskNotFoundError())) }
 
             // Set up SSE consumer with resubscribe flag
             val sseEventQueue = setupSseConsumer(taskQueryParams.id, isResubscribe = true)
 
             // Send current task status update
-            val statusEvent = TaskStatusUpdateEvent(
-                id = task.id,
-                status = task.status,
-                final = false,
-            )
-            enqueueEventsForSse(task.id, statusEvent)
+            val statusEvent = TaskStatusUpdateEvent(id = task.id, status = task.status, final = false)
+            sendSseEvent(task.id, statusEvent)
 
             // Return the flow of events
-            dequeueEventsForSse(request.id ?: "", task.id, sseEventQueue)
+            return dequeueEventsForSse(request.id, task.id, sseEventQueue)
+
         } catch (e: Exception) {
             log.error("Error while resubscribing to task: ${e.message}")
-            flow {
+            return flow {
                 emit(
                     SendTaskStreamingResponse(
                         id = request.id,
@@ -327,20 +327,13 @@ class BasicTaskManager(
      * @return A channel for receiving events
      * @throws IllegalArgumentException if resubscribing to a non-existent task
      */
-    private suspend fun setupSseConsumer(taskId: String, isResubscribe: Boolean = false): Channel<Any> {
-        return subscriberLock.withLock {
-            if (!taskSseSubscribers.containsKey(taskId)) {
-                if (isResubscribe) {
-                    throw IllegalArgumentException("Task not found for resubscription")
-                } else {
-                    taskSseSubscribers[taskId] = mutableListOf()
-                }
-            }
-
-            val sseEventQueue = Channel<Any>(Channel.UNLIMITED)
-            taskSseSubscribers[taskId]?.add(sseEventQueue)
-            sseEventQueue
+    private fun setupSseConsumer(taskId: String, isResubscribe: Boolean = false): Channel<Any> {
+        if (!taskSseSubscribers.containsKey(taskId) && isResubscribe) {
+            throw IllegalArgumentException("Task not found for resubscription")
         }
+        val sseEventQueue = Channel<Any>(Channel.UNLIMITED)
+        taskSseSubscribers.computeIfAbsent(taskId) { synchronizedList(mutableListOf()) }.add(sseEventQueue)
+        return sseEventQueue
     }
 
     /**
@@ -349,11 +342,9 @@ class BasicTaskManager(
      * @param taskId The ID of the task
      * @param taskUpdateEvent The event to send
      */
-    private suspend fun enqueueEventsForSse(taskId: String, taskUpdateEvent: Any) {
-        subscriberLock.withLock {
-            taskSseSubscribers[taskId]?.forEach { subscriber ->
-                subscriber.send(taskUpdateEvent)
-            }
+    private suspend fun sendSseEvent(taskId: String, taskUpdateEvent: TaskStreamingResult) {
+        taskSseSubscribers[taskId]?.forEach { subscriber ->
+            subscriber.send(SendTaskStreamingResponse(result = taskUpdateEvent))
         }
     }
 
@@ -366,7 +357,7 @@ class BasicTaskManager(
      * @return A flow of streaming responses
      */
     private fun dequeueEventsForSse(
-        requestId: String,
+        requestId: String?,
         taskId: String,
         sseEventQueue: Channel<Any>,
     ): Flow<SendTaskStreamingResponse> = flow {
@@ -384,11 +375,7 @@ class BasicTaskManager(
                 }
             }
         } finally {
-            runBlocking {
-                subscriberLock.withLock {
-                    taskSseSubscribers[taskId]?.remove(sseEventQueue)
-                }
-            }
+            taskSseSubscribers[taskId]?.remove(sseEventQueue)
         }
     }
 }
