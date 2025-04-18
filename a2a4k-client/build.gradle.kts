@@ -4,6 +4,7 @@
 
 dependencies {
     implementation(project(":a2a4k-models"))
+    implementation(libs.bundles.kotlinx)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio.jvm)
     implementation(libs.ktor.serialization.kotlinx.json)

@@ -9,7 +9,6 @@ A2A-4K is a kotlin implementation of the Agent2Agent (A2A) protocol (https://git
 
 The project is currently very much WIP and looking for contributors.
 
-
 ## Usage Examples
 
 ### Server-side: Implementing a TaskHandler
@@ -134,6 +133,41 @@ fun main() = runBlocking {
     }
 }
 ```
+
+## Project Structure
+
+The A2A-4K project is organized into several modules, each with a specific purpose:
+
+### a2a4k-models
+
+This module contains the data models and serialization logic for the A2A protocol. It defines:
+- JSON-RPC request and response structures
+- Task and message models
+- Agent capabilities and metadata (AgentCard)
+- Serialization/deserialization utilities
+
+### a2a4k-server
+
+This module provides the core server-side functionality for the A2A protocol. It includes:
+- TaskManager interface and implementation (BasicTaskManager)
+- TaskHandler interface for processing tasks
+- TaskStorage interface and implementation for storing tasks
+- Core logic for managing task lifecycle
+
+### a2a4k-server-ktor
+
+This module implements a Ktor-based server for the A2A protocol, building on the core functionality provided by a2a4k-server. It includes:
+- A2AServer class for creating and managing an A2A server
+- A2AModule for configuring Ktor routing
+- HTTP endpoints for the A2A protocol
+
+### a2a4k-client
+
+This module provides client-side functionality for communicating with A2A servers. It includes:
+- A2AClient class for sending requests to A2A servers
+- Methods for all A2A operations (getTask, sendTask, cancelTask, etc.)
+- Support for streaming responses
+- Error handling
 
 
 ## Code of Conduct

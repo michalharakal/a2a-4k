@@ -4,11 +4,11 @@
 
 dependencies {
     implementation(project(":a2a4k-models"))
+    implementation(libs.bundles.kotlinx)
     implementation(libs.ktor.server.core.jvm)
     implementation(libs.ktor.server.netty.jvm)
     implementation(libs.ktor.server.sse)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.ktor.server.sse)
     implementation(libs.slf4j.api)
 
     // Test dependencies
