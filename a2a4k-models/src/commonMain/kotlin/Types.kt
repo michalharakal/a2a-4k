@@ -25,9 +25,9 @@ data class StringValue(val value: String?) : StringOrInt()
 
 class StringOrIntSerializer : KSerializer<StringOrInt> {
 
-    override val descriptor = buildClassSerialDescriptor("StringOrInt") {
-        element<String>("string")
-        element<Int>("int")
+    override val descriptor = buildClassSerialDescriptor(StringOrIntSerializer::class.toString()) {
+        element<String>("int")
+        element<Int>("string")
     }
 
     override fun serialize(encoder: Encoder, value: StringOrInt) {
