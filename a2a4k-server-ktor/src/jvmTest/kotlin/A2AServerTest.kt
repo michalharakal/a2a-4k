@@ -28,6 +28,7 @@ import org.a2a4k.models.SendTaskRequest
 import org.a2a4k.models.SendTaskResponse
 import org.a2a4k.models.SetTaskPushNotificationRequest
 import org.a2a4k.models.SetTaskPushNotificationResponse
+import org.a2a4k.models.StringValue
 import org.a2a4k.models.TaskIdParams
 import org.a2a4k.models.TaskPushNotificationConfig
 import org.a2a4k.models.TaskQueryParams
@@ -117,7 +118,7 @@ class A2AServerTest {
     fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
-        val requestId = "req-123"
+        val requestId = StringValue("req-123")
         val request = GetTaskRequest(
             id = requestId,
             params = TaskQueryParams(id = taskId, historyLength = 10),
@@ -144,7 +145,7 @@ class A2AServerTest {
         // Given
         val taskId = "test-task-123"
         val sessionId = "session-123"
-        val requestId = "req-456"
+        val requestId = StringValue("req-456")
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
         val message = Message(role = "user", parts = listOf(textPart))
 
@@ -179,7 +180,7 @@ class A2AServerTest {
 
         // When - Get task
         val getRequest = GetTaskRequest(
-            id = "get-req-123",
+            id = StringValue("get-req-123"),
             params = TaskQueryParams(id = taskId, historyLength = 10),
         )
 
@@ -192,7 +193,7 @@ class A2AServerTest {
         val getResponseBody = getResponse.bodyAsText()
         val getTaskResponse = json.decodeFromString<GetTaskResponse>(getResponseBody)
 
-        assertEquals("get-req-123", getTaskResponse.id)
+        assertEquals(StringValue("get-req-123"), getTaskResponse.id)
         assertNotNull(getTaskResponse.result)
         assertNull(getTaskResponse.error)
         assertEquals(taskId, getTaskResponse.result?.id)
@@ -205,7 +206,7 @@ class A2AServerTest {
     fun `test CancelTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
-        val requestId = "req-cancel"
+        val requestId = StringValue("req-cancel")
         val request = CancelTaskRequest(
             id = requestId,
             params = TaskIdParams(id = taskId),
@@ -232,13 +233,13 @@ class A2AServerTest {
         // Given
         val taskId = "push-task-123"
         val sessionId = "session-push"
-        val requestId = "req-push"
+        val requestId = StringValue("req-push")
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
         val message = Message(role = "user", parts = listOf(textPart))
 
         // Create task
         val sendRequest = SendTaskRequest(
-            id = "send-req-123",
+            id = StringValue("send-req-123"),
             params = TaskSendParams(
                 id = taskId,
                 sessionId = sessionId,
@@ -276,7 +277,7 @@ class A2AServerTest {
 
         // When - Get push notification
         val getPushRequest = GetTaskPushNotificationRequest(
-            id = "get-push-req-123",
+            id = StringValue("get-push-req-123"),
             params = TaskIdParams(id = taskId),
         )
 
@@ -289,7 +290,7 @@ class A2AServerTest {
         val getPushResponseBody = getPushResponse.bodyAsText()
         val getTaskPushResponse = json.decodeFromString<GetTaskPushNotificationResponse>(getPushResponseBody)
 
-        assertEquals("get-push-req-123", getTaskPushResponse.id)
+        assertEquals(StringValue("get-push-req-123"), getTaskPushResponse.id)
         assertNotNull(getTaskPushResponse.result)
         assertNull(getTaskPushResponse.error)
         assertEquals(taskId, getTaskPushResponse.result?.id)

@@ -346,7 +346,7 @@ class BasicTaskManager(
      * @return A flow of streaming responses
      */
     private fun dequeueEventsForSse(
-        requestId: String?,
+        requestId: StringOrInt?,
         taskId: String,
         sseEventQueue: Channel<Any>,
     ): Flow<SendTaskStreamingResponse> = flow {

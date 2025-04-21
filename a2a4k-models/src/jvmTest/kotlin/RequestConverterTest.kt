@@ -31,7 +31,7 @@ class RequestConverterTest {
         // Then
         assertIs<CancelTaskRequest>(result)
         assertEquals("2.0", result.jsonrpc)
-        assertEquals("123", result.id)
+        assertEquals("123", (result.id as StringValue).value)
         assertEquals("task-123", result.params.id)
     }
 
@@ -57,7 +57,7 @@ class RequestConverterTest {
         // Then
         assertIs<GetTaskRequest>(result)
         assertEquals("2.0", result.jsonrpc)
-        assertEquals("456", result.id)
+        assertEquals("456", (result.id as StringValue).value)
         assertEquals("task-456", result.params.id)
         assertEquals(10, result.params.historyLength)
     }
