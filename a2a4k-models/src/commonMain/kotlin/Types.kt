@@ -3,12 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k.models
 
-import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
@@ -26,11 +23,11 @@ data class IntValue(val value: Int?) : StringOrInt()
 @Serializable
 data class StringValue(val value: String?) : StringOrInt()
 
-class StringOrIntSerializer: KSerializer<StringOrInt> {
+class StringOrIntSerializer : KSerializer<StringOrInt> {
 
-    override val descriptor = buildClassSerialDescriptor(StringOrIntSerializer::class.toString()) {
-        element<String>("int")
-        element<Int>("string")
+    override val descriptor = buildClassSerialDescriptor("StringOrInt") {
+        element<String>("string")
+        element<Int>("int")
     }
 
     override fun serialize(encoder: Encoder, value: StringOrInt) {

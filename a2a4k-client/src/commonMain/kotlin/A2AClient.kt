@@ -159,7 +159,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): Flow<SendTaskStreamingResponse> = flow {
         val request = SendTaskStreamingRequest(
-           id = StringValue(requestId),
+            id = StringValue(requestId),
             params = TaskSendParams(
                 id = taskId,
                 sessionId = sessionId,
@@ -198,7 +198,7 @@ class A2AClient(
      */
     suspend fun cancelTask(taskId: String, requestId: String = generateRequestId()): CancelTaskResponse {
         val request = CancelTaskRequest(
-           id = StringValue(requestId),
+            id = StringValue(requestId),
             params = TaskIdParams(id = taskId),
         )
 
@@ -228,7 +228,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): SetTaskPushNotificationResponse {
         val request = SetTaskPushNotificationRequest(
-           id = StringValue(requestId),
+            id = StringValue(requestId),
             params = TaskPushNotificationConfig(
                 id = taskId,
                 pushNotificationConfig = config,
@@ -259,7 +259,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): GetTaskPushNotificationResponse {
         val request = GetTaskPushNotificationRequest(
-           id = StringValue(requestId),
+            id = StringValue(requestId),
             params = TaskIdParams(id = taskId),
         )
 
