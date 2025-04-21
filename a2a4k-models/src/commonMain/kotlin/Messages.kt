@@ -76,7 +76,7 @@ data class Provider(
 
 @Serializable
 data class Capabilities(
-    val streaming: Boolean? = null,
-    val pushNotifications: Boolean? = null,
-    val stateTransitionHistory: Boolean? = null,
+    val streaming: Boolean = false,
+    val pushNotifications: Boolean = false,
+    val stateTransitionHistory: Boolean = false,
 )

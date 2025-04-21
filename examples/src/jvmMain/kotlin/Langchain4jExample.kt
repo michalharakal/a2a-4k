@@ -3,60 +3,35 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.a2a4k
 
+import dev.langchain4j.model.openai.OpenAiChatModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.a2a4k.models.AgentCard
-import org.a2a4k.models.Artifact
 import org.a2a4k.models.Capabilities
 import org.a2a4k.models.Message
-import org.a2a4k.models.Task
-import org.a2a4k.models.TaskState
-import org.a2a4k.models.TaskStatus
-import org.a2a4k.models.TextPart
 import org.a2a4k.models.toUserMessage
 
-// Custom TaskHandler that calls your Agent
-class MyAgentTaskHandler : TaskHandler {
-    override fun handle(task: Task): Task {
-        // Extract the message from the task
-        val message = task.history?.lastOrNull()
-
-        // Call your Agent with the message
-        val response = callYourAgent(message)
-
-        // Create a response Artifact
-        val responseArtifact = Artifact(
-            name = "agent-response",
-            parts = listOf(TextPart(text = response)),
-        )
-
-        // Update the task status
-        val updatedStatus = TaskStatus(state = TaskState.COMPLETED)
-
-        // Return the updated task
-        return task.copy(status = updatedStatus, artifacts = listOf(responseArtifact))
-    }
-
-    private fun callYourAgent(message: Message?): String {
-        // Implement your Agent call here
-        // This could be an API call to an LLM, a custom AI service, etc.
-        return "Response from your Agent"
-    }
-}
-
+/**
+ * Example using LangChain4j.
+ */
 fun main() = runBlocking {
+    // Call LangChain4j to answer the message.
+    val callLangChain4j = { message: Message ->
+        val model = OpenAiChatModel.builder()
+            .apiKey(System.getenv("OPENAI_API_KEY"))
+            .modelName("gpt-4o-mini")
+            .build()
+        model.chat(message.content())
+    }
+
 // Create your TaskHandler
-    val taskHandler = MyAgentTaskHandler()
+    val taskHandler = BasicTaskHandler(callLangChain4j)
 
 // Create a TaskManager with your TaskHandler
     val taskManager = BasicTaskManager(taskHandler)
 
 // Define your Agent's capabilities
-    val capabilities = Capabilities(
-        streaming = true,
-        pushNotifications = true,
-        stateTransitionHistory = true,
-    )
+    val capabilities = Capabilities()
 
 // Create an AgentCard for your Agent
     val agentCard = AgentCard(
@@ -82,6 +57,7 @@ fun main() = runBlocking {
     // Start the server
     server.start(wait = false)
 
+    // Wait for the server to start
     delay(1_000)
 
     val client = A2AClient(baseUrl = "http://localhost:5001")
@@ -95,11 +71,7 @@ fun main() = runBlocking {
         val message = "Hello, Agent!".toUserMessage()
 
         // Send a task to the Agent
-        val response = client.sendTask(
-            taskId = "task-123",
-            sessionId = "session-456",
-            message = message,
-        )
+        val response = client.sendTask(taskId = "task-123", sessionId = "session-456", message = message)
 
         // Process the response
         if (response.result != null) {

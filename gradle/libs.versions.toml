@@ -33,7 +33,9 @@ ktor-server-core-jvm = { module = "io.ktor:ktor-server-core-jvm", version.ref = 
 ktor-server-netty-jvm = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor-version" }
 ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor-version" }
 
-redis-lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce-version" }
+# Logging
+slf4j-log4j-over-slf4j = { module = "org.slf4j:log4j-over-slf4j", version.ref = "slf4j-version" }
+slf4j-jdk14 = { module = "org.slf4j:slf4j-jdk14", version.ref = "slf4j-version" }
 
 # Jackson dependencies
 jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson-version" }
