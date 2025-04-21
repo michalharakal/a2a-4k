@@ -7,6 +7,8 @@
 
 A2A-4K is a kotlin implementation of the Agent2Agent (A2A) protocol (https://github.com/google/A2A).
 
+Check out the examples in the `examples` directory for a quick start.
+
 The project is currently very much WIP and looking for contributors.
 
 ## Usage Examples
