@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package org.a2a4k.storage
 
 import org.a2a4k.models.PushNotificationConfig
 import org.a2a4k.models.Task

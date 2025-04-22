@@ -18,7 +18,7 @@ import org.eclipse.lmos.arc.core.getOrThrow
  */
 fun main() = runBlocking {
     // Only required if OPENAI_API_KEY is not set as an environment variable.
-    System.setProperty("OPENAI_API_KEY", "****")
+    // System.setProperty("OPENAI_API_KEY", "****")
 
     // Create your Agent
     val agents = agents {
@@ -40,7 +40,11 @@ fun main() = runBlocking {
     val taskManager = BasicTaskManager(taskHandler)
 
 // Define your Agent's capabilities
-    val capabilities = Capabilities()
+    val capabilities = Capabilities(
+        streaming = true,
+        pushNotifications = true,
+        stateTransitionHistory = true,
+    )
 
 // Create an AgentCard for your Agent
     val agentCard = AgentCard(
