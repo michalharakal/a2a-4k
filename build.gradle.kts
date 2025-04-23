@@ -115,6 +115,7 @@ dependencies {
     kover(project("a2a4k-models"))
     kover(project("a2a4k-server"))
     kover(project("a2a4k-server-ktor"))
+    kover(project("a2a4k-storage-redis"))
     kover(project("a2a4k-client"))
 }
 

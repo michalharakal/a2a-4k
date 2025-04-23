@@ -171,6 +171,41 @@ This module provides client-side functionality for communicating with A2A server
 - Support for streaming responses
 - Error handling
 
+### a2a4k-storage-redis
+
+This module provides a Redis implementation of the TaskStorage interface, allowing tasks and notification configurations to be stored in Redis.
+
+## Using RedisTaskStorage
+
+The A2A-4K project includes a Redis implementation of the TaskStorage interface, 
+which allows you to store tasks and notification configurations in Redis instead of in-memory. 
+
+This provides several benefits:
+
+- **Persistence**: Tasks and configurations are stored in Redis and survive application restarts
+- **Scalability**: Multiple instances of your application can share the same Redis database
+- **Performance**: Redis offers high-performance storage with configurable persistence options
+
+To use RedisTaskStorage, add the following dependency to your project:
+
+```kotlin
+// Gradle Kotlin DSL
+implementation("org.a2a4k:a2a4k-storage-redis:$a2a4kVersion")
+```
+
+and then set the following environment variables:
+
+- `A2A_STORAGE_REDIS_HOST`: The hostname or IP address of your Redis server (required)
+- `A2A_STORAGE_REDIS_PORT`: The port number of your Redis server (optional, defaults to Redis standard port)
+- `A2A_STORAGE_REDIS_USERNAME`: Username for Redis authentication (optional)
+- `A2A_STORAGE_REDIS_PASSWORD`: Password for Redis authentication (optional)
+- `A2A_STORAGE_REDIS_SSL`: Set to "true" to enable SSL connection (optional, defaults to false)
+- `A2A_STORAGE_REDIS_TLS`: Set to "true" to enable TLS connection (optional, defaults to false)
+
+
+This will automatically load and configure the RedisTaskStorage.
+
+```kotlin
 
 ## Code of Conduct
 

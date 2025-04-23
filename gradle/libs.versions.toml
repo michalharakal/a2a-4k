@@ -16,6 +16,9 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j-version" }
 
+# lettuce
+redis-lettuce = { module = "io.lettuce:lettuce-core", version.ref = "lettuce-version" }
+
 # Spring dependencies
 spring-boot-starter = { module = "org.springframework.boot:spring-boot-starter", version.ref = "spring-boot-version" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot-version" }

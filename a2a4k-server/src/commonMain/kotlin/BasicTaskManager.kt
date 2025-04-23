@@ -10,6 +10,8 @@ import org.a2a4k.models.*
 import org.a2a4k.models.GetTaskResponse
 import org.a2a4k.notifications.BasicNotificationPublisher
 import org.a2a4k.notifications.NotificationPublisher
+import org.a2a4k.storage.TaskStorage
+import org.a2a4k.storage.loadTaskStorage
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.Collections.synchronizedList
@@ -25,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class BasicTaskManager(
     private val taskHandler: TaskHandler,
-    private val taskStorage: TaskStorage = InMemoryTaskStorage(),
+    private val taskStorage: TaskStorage = loadTaskStorage(),
     private val notificationPublisher: NotificationPublisher? = BasicNotificationPublisher(),
 ) : TaskManager {
 
