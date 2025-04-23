@@ -205,8 +205,6 @@ and then set the following environment variables:
 
 This will automatically load and configure the RedisTaskStorage.
 
-```kotlin
-
 ## Code of Conduct
 
 This project has adopted the [Contributor Covenant](https://www.contributor-covenant.org/) in version 2.1 as our code of conduct. Please see the details in our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). All contributors must abide by the code of conduct.
