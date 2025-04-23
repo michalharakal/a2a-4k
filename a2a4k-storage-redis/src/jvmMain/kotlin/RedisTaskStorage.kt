@@ -10,6 +10,9 @@ import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.a2a4k.models.PushNotificationConfig
 import org.a2a4k.models.Task
+import org.a2a4k.models.a2aJson
+import org.a2a4k.models.fromJson
+import org.a2a4k.models.toJson
 import org.a2a4k.storage.TaskStorage
 
 /**
@@ -38,8 +41,7 @@ class RedisTaskStorage(private val redisClient: AbstractRedisClient) : TaskStora
      * @param task The task to store
      */
     override suspend fun store(task: Task) {
-        // Store the task ID in Redis
-        commands.set("$taskPrefix${task.id}", task.id).awaitSingle()
+        commands.set("$taskPrefix${task.id}", a2aJson.encodeToString(task)).awaitSingle()
     }
 
     /**
@@ -49,16 +51,7 @@ class RedisTaskStorage(private val redisClient: AbstractRedisClient) : TaskStora
      * @return The task if found, null otherwise
      */
     override suspend fun fetch(taskId: String): Task? {
-        // Check if the task exists in Redis
-        val storedTaskId = commands.get("$taskPrefix$taskId").awaitSingleOrNull() ?: return null
-
-        // If the task exists, create a minimal Task object with just the ID
-        return Task(
-            id = storedTaskId,
-            status = org.a2a4k.models.TaskStatus(
-                state = org.a2a4k.models.TaskState.UNKNOWN,
-            ),
-        )
+        return commands.get("$taskPrefix$taskId").awaitSingleOrNull()?.fromJson<Task>() ?: return null
     }
 
     /**
@@ -73,8 +66,7 @@ class RedisTaskStorage(private val redisClient: AbstractRedisClient) : TaskStora
         // Check if task exists
         fetch(taskId) ?: throw IllegalArgumentException("Task not found for $taskId")
 
-        // Store the notification URL in Redis
-        commands.set("$notificationPrefix$taskId", config.url).awaitSingleOrNull()
+        commands.set("$notificationPrefix$taskId", config.toJson()).awaitSingleOrNull()
     }
 
     /**
@@ -85,10 +77,8 @@ class RedisTaskStorage(private val redisClient: AbstractRedisClient) : TaskStora
      */
     override suspend fun fetchNotificationConfig(taskId: String): PushNotificationConfig? {
         // Get the notification URL from Redis
-        val url = commands.get("$notificationPrefix$taskId").awaitSingleOrNull() ?: return null
-
-        // Create a minimal PushNotificationConfig with just the URL
-        return PushNotificationConfig(url = url)
+        return commands.get("$notificationPrefix$taskId").awaitSingleOrNull()?.fromJson<PushNotificationConfig>()
+            ?: return null
     }
 
     /**
