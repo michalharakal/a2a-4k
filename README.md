@@ -193,7 +193,7 @@ To use RedisTaskStorage, add the following dependency to your project:
 implementation("org.a2a4k:a2a4k-storage-redis:$a2a4kVersion")
 ```
 
-and then set the following environment variables:
+and then set the following environment variables / system properties:
 
 - `A2A_STORAGE_REDIS_HOST`: The hostname or IP address of your Redis server (required)
 - `A2A_STORAGE_REDIS_PORT`: The port number of your Redis server (optional, defaults to Redis standard port)
