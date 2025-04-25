@@ -13,6 +13,8 @@ The project is currently very much WIP and looking for contributors.
 
 ## Usage Examples
 
+Don't forget to check out the Langchain4j and Arc examples [here](https://github.com/a2a-4k/a2a-4k/tree/main/examples/src/jvmMain/kotlin).
+
 ### Server-side: Implementing a TaskHandler
 
 The `TaskHandler` interface is the core component for handling tasks in the A2A system. It's used to call an Agent of your choice. Here's a simple example of implementing a TaskHandler:
