@@ -35,3 +35,8 @@ fun AgentCard.toJson() = a2aJson.encodeToString(AgentCard.serializer(), this)
 fun Task.toJson() = a2aJson.encodeToString(Task.serializer(), this)
 fun PushNotificationConfig.toJson() = a2aJson.encodeToString(PushNotificationConfig.serializer(), this)
 inline fun <reified T> String.fromJson() = a2aJson.decodeFromString<T>(this)
+
+/**
+ * Helper function to get message content.
+ */
+fun Message.content() = (this.parts.firstOrNull() as TextPart).text

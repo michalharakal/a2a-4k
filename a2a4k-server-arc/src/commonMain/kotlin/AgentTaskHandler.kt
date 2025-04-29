@@ -1,0 +1,70 @@
+// SPDX-FileCopyrightText: 2025
+//
+// SPDX-License-Identifier: Apache-2.0
+package org.a2a4k.arc
+
+import kotlinx.coroutines.runBlocking
+import org.a2a4k.TaskHandler
+import org.a2a4k.models.Artifact
+import org.a2a4k.models.Task
+import org.a2a4k.models.TaskState.FAILED
+import org.a2a4k.models.TextPart
+import org.a2a4k.models.content
+import org.eclipse.lmos.arc.agents.AgentProvider
+import org.eclipse.lmos.arc.agents.ConversationAgent
+import org.eclipse.lmos.arc.agents.User
+import org.eclipse.lmos.arc.agents.agent.executeWithHandover
+import org.eclipse.lmos.arc.agents.conversation.AssistantMessage
+import org.eclipse.lmos.arc.agents.conversation.Conversation
+import org.eclipse.lmos.arc.agents.conversation.UserMessage
+import org.eclipse.lmos.arc.agents.conversation.latest
+import org.eclipse.lmos.arc.core.Success
+import java.util.*
+
+/**
+ * A TaskHandler that provides the bridge between the A2A4K task system and the Arc agent system.
+ */
+class AgentTaskHandler(private val agent: ConversationAgent, private val agentProvider: AgentProvider) : TaskHandler {
+
+    // TODO remove runBlocking
+    override fun handle(task: Task): Task = runBlocking {
+        // Convert the Task to a Conversation
+        val conversation = Conversation(
+            conversationId = task.sessionId ?: UUID.randomUUID().toString(),
+            user = (task.metadata["user_id"])?.let { User(it.toString()) },
+            currentTurnId = (task.metadata["turn_id"])?.toString() ?: UUID.randomUUID().toString(),
+            transcript = task.history?.map { m ->
+                when (m.role) {
+                    "user" -> UserMessage(m.content())
+                    "agent" -> AssistantMessage(m.content())
+                    else -> error("Unknown role: ${m.role}")
+                }
+            } ?: emptyList(),
+        )
+
+        // Execute the Agent
+        val result = agent.executeWithHandover(conversation, setOf(), agentProvider)
+
+        // Handle the result
+        when (result) {
+            is Success -> task.copy(
+                status = task.status.copy(
+                    state = task.status.state,
+                ),
+                artifacts = listOf(
+                    Artifact(
+                        parts = listOf(
+                            TextPart(
+                                text = result.value.latest<AssistantMessage>()?.content ?: "",
+                            ),
+                        ),
+                    ),
+                ),
+            )
+
+            else -> task.copy(
+                status = task.status.copy(state = FAILED),
+            )
+        }
+    }
+}
