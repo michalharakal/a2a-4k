@@ -7,12 +7,14 @@ ktor-version = "3.1.1"
 lettuce-version = "6.3.2.RELEASE"
 jackson-version = "2.9.8"
 resilience4j-version = "2.2.0"
+kotlinx-datetime-version = "0.6.2"
 
 [libraries]
 kotlinx-coroutines-slf4j = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j", version.ref = "kotlin-x-version" }
 kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlin-x-version" }
 kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "kotlin-x-version" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-version" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime-version" }
 
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j-version" }
 

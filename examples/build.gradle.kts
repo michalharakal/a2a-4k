@@ -10,6 +10,7 @@ kotlin {
                 implementation(project(":a2a4k-models"))
                 implementation(project(":a2a4k-client"))
                 implementation(project(":a2a4k-server-ktor"))
+                implementation(project(":a2a4k-server-arc"))
                 implementation(libs.ktor.client.core)
                 implementation(libs.bundles.kotlinx)
             }
@@ -18,8 +19,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("dev.langchain4j:langchain4j-open-ai:1.0.0-beta3")
-                implementation("org.eclipse.lmos:arc-agents:0.123.0-SNAPSHOT")
-                implementation("org.eclipse.lmos:arc-azure-client:0.123.0-SNAPSHOT")
+                implementation("org.eclipse.lmos:arc-agents:0.124.0")
+                implementation("org.eclipse.lmos:arc-azure-client:0.124.0")
                 implementation(libs.slf4j.jdk14)
             }
         }

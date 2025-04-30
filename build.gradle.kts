@@ -101,7 +101,7 @@ subprojects {
     }
 
     repositories {
-        mavenLocal()
+        // mavenLocal() This somehow causes with js compilation
         mavenCentral()
         google()
     }

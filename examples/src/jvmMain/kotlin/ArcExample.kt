@@ -5,13 +5,10 @@ package org.a2a4k
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.Capabilities
+import org.a2a4k.arc.serveA2A
 import org.a2a4k.models.toUserMessage
-import org.eclipse.lmos.arc.agents.agent.ask
+import org.eclipse.lmos.arc.agents.agent.Skill
 import org.eclipse.lmos.arc.agents.agents
-import org.eclipse.lmos.arc.agents.getChatAgent
-import org.eclipse.lmos.arc.core.getOrThrow
 
 /**
  * Example using the Kotlin AI Framework Ard, see https://eclipse.dev/lmos/arc2/.
@@ -20,65 +17,35 @@ fun main() = runBlocking {
     // Only required if OPENAI_API_KEY is not set as an environment variable.
     // System.setProperty("OPENAI_API_KEY", "****")
 
-    // Create your Agent
-    val agents = agents {
+    // Create your Agent and host it in an A2A server.
+    agents {
         agent {
             name = "MyAgent"
             model { "gpt-4o-mini" }
+            skills = listOf(
+                Skill(
+                    id = "greeting",
+                    name = "Greeting",
+                    description = "A simple greeting skill",
+                    tags = emptyList(),
+                ),
+            )
             prompt {
                 """ You are a helpful assistant. Greet the user with "Hello, from A2A"! """
             }
         }
-    }
-
-// Create your TaskHandler
-    val taskHandler = BasicTaskHandler({ message ->
-        agents.getChatAgent("MyAgent").ask(message.content()).getOrThrow()
-    })
-
-// Create a TaskManager with your TaskHandler
-    val taskManager = BasicTaskManager(taskHandler)
-
-// Define your Agent's capabilities
-    val capabilities = Capabilities(
-        streaming = true,
-        pushNotifications = true,
-        stateTransitionHistory = true,
-    )
-
-// Create an AgentCard for your Agent
-    val agentCard = AgentCard(
-        name = "My Agent",
-        description = "A custom A2A Agent",
-        url = "https://example.com",
-        version = "1.0.0",
-        capabilities = capabilities,
-        defaultInputModes = listOf("text"),
-        defaultOutputModes = listOf("text"),
-        skills = listOf(),
-    )
-
-    // Create and start the A2A Server
-    val server = A2AServer(
-        host = "0.0.0.0",
-        port = 5001,
-        endpoint = "/",
-        agentCard = agentCard,
-        taskManager = taskManager,
-    )
-
-    // Start the server
-    server.start(wait = false)
+    }.serveA2A(wait = false)
 
     // Wait for the server to start
     delay(1_000)
 
+    // Use the client to connect to the server
     val client = A2AClient(baseUrl = "http://localhost:5001")
 
     try {
         // Get the Agent's metadata
         val agentCard = client.getAgentCard()
-        println("Connected to Agent: ${agentCard.name}")
+        println("Connected to Agent: $agentCard")
 
         // Create a message to send to the Agent
         val message = "Hello, Agent!".toUserMessage()

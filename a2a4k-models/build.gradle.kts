@@ -8,6 +8,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
@@ -18,5 +19,9 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
             }
         }
+    }
+    js {
+        browser { }
+        binaries.executable()
     }
 }
