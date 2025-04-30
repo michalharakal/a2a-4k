@@ -86,18 +86,19 @@ class BasicTaskManager(
             val task = upsertTask(taskSendParams)
 
             // Set push notification if provided
-            taskSendParams.pushNotification?.let {
+            val pushNotificationConfig = taskSendParams.pushNotification?.let {
                 setPushNotificationInfo(taskSendParams.id, it)
-            }
+            } ?: taskStorage.fetchNotificationConfig(task.id)
+
+            // Send push notification WORKING
+            pushNotificationConfig?.let { notificationPublisher?.publish(task.working(), it) }
 
             // Send Task to Agent
             val handledTask = taskHandler.handle(task)
             taskStorage.store(handledTask)
 
-            // Send push notification if configured
-            taskStorage.fetchNotificationConfig(task.id)?.let {
-                notificationPublisher?.publish(handledTask, it)
-            }
+            // Send push notification
+            pushNotificationConfig?.let { notificationPublisher?.publish(handledTask, it) }
 
             // Return the task with appropriate history length
             val taskResult = appendTaskHistory(handledTask, taskSendParams.historyLength)
@@ -168,10 +169,15 @@ class BasicTaskManager(
      *
      * @param taskId The ID of the task
      * @param notificationConfig The push notification configuration to set
+     * @return The push notification configuration that was set
      * @throws IllegalArgumentException if the task is not found
      */
-    private suspend fun setPushNotificationInfo(taskId: String, notificationConfig: PushNotificationConfig) {
+    private suspend fun setPushNotificationInfo(
+        taskId: String,
+        notificationConfig: PushNotificationConfig,
+    ): PushNotificationConfig {
         taskStorage.storeNotificationConfig(taskId, notificationConfig)
+        return notificationConfig
     }
 
     /**

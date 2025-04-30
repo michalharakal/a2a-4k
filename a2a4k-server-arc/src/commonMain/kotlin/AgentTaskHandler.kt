@@ -5,10 +5,7 @@ package org.a2a4k.arc
 
 import kotlinx.coroutines.runBlocking
 import org.a2a4k.TaskHandler
-import org.a2a4k.models.Artifact
 import org.a2a4k.models.Task
-import org.a2a4k.models.TaskState.FAILED
-import org.a2a4k.models.TextPart
 import org.a2a4k.models.content
 import org.eclipse.lmos.arc.agents.AgentProvider
 import org.eclipse.lmos.arc.agents.ConversationAgent
@@ -47,24 +44,8 @@ class AgentTaskHandler(private val agent: ConversationAgent, private val agentPr
 
         // Handle the result
         when (result) {
-            is Success -> task.copy(
-                status = task.status.copy(
-                    state = task.status.state,
-                ),
-                artifacts = listOf(
-                    Artifact(
-                        parts = listOf(
-                            TextPart(
-                                text = result.value.latest<AssistantMessage>()?.content ?: "",
-                            ),
-                        ),
-                    ),
-                ),
-            )
-
-            else -> task.copy(
-                status = task.status.copy(state = FAILED),
-            )
+            is Success -> task.completed(result.value.latest<AssistantMessage>()?.content ?: "")
+            else -> task.failed()
         }
     }
 }

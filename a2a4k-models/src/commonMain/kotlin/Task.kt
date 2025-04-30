@@ -6,6 +6,9 @@ package org.a2a4k.models
 import kotlinx.datetime.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import org.a2a4k.models.TaskState.COMPLETED
+import org.a2a4k.models.TaskState.FAILED
+import org.a2a4k.models.TaskState.WORKING
 
 // Marker interface for streaming task results
 @Serializable
@@ -20,7 +23,19 @@ data class Task(
     val history: List<Message>? = null,
     val artifacts: List<Artifact>? = null,
     val metadata: Map<String, String> = emptyMap(),
-)
+) {
+    fun working(): Task {
+        return copy(status = TaskStatus(WORKING))
+    }
+
+    fun completed(artifact: String): Task {
+        return copy(artifacts = listOf(textArtifact(artifact)), status = TaskStatus(COMPLETED))
+    }
+
+    fun failed(): Task {
+        return copy(status = TaskStatus(FAILED))
+    }
+}
 
 @Serializable
 data class TaskStatus(

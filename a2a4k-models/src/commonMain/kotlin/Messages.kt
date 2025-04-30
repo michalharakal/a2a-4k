@@ -19,6 +19,10 @@ data class Artifact(
     val lastChunk: Boolean? = null,
 )
 
+fun textArtifact(text: String): Artifact {
+    return Artifact(parts = listOf(TextPart(text)))
+}
+
 @Serializable
 data class Message(
     val role: String,
