@@ -43,8 +43,9 @@ class AgentTaskHandler(private val agent: ConversationAgent, private val agentPr
         val result = agent.executeWithHandover(
             conversation,
             setOf(
-                ContextProvider(task)
-            ), agentProvider
+                ContextProvider(task),
+            ),
+            agentProvider,
         )
 
         // Handle the result

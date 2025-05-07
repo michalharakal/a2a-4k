@@ -15,13 +15,17 @@ import org.eclipse.lmos.arc.agents.dsl.extensions.UserProfileProvider
 class ContextProvider(private val task: Task) : SystemContextProvider, UserProfileProvider {
 
     override fun provideSystem(): SystemContext {
-        return SystemContext(task.metadata.filter { it.key.startsWith("system_") }
-            .mapValues { it.value.substringAfter("system_") })
+        return SystemContext(
+            task.metadata.filter { it.key.startsWith("system_") }
+                .mapValues { it.value.substringAfter("system_") },
+        )
     }
 
     override fun provideProfile(): UserProfile {
-        return UserProfile(task.metadata.filter { it.key.startsWith("user_") }.mapValues {
-            it.value.substringAfter("user_")
-        })
+        return UserProfile(
+            task.metadata.filter { it.key.startsWith("user_") }.mapValues {
+                it.value.substringAfter("user_")
+            },
+        )
     }
 }
