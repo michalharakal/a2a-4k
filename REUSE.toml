@@ -47,7 +47,7 @@ SPDX-FileCopyrightText = "The original author or authors."
 SPDX-License-Identifier = "Apache-2.0"
 
 [[annotations]]
-path = ["**/.gitignore", ".gitattributes", "**/README.md", "CODEOWNERS"]
+path = ["**/.gitignore", ".gitattributes", "**/README.md", "CODEOWNERS", ".editorconfig", "**/main/resources/META-INF/**", "**/test/resources/META-INF/**", "**/jvmMain/resources/META-INF/**", "**/jvmTest/resources/META-INF/**", "**/test/resources/*.json", "**/test/resources/*.txt", "**/test/resources/*.yml"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "none"
 SPDX-License-Identifier = "CC0-1.0"

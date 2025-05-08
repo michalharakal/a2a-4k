@@ -90,7 +90,7 @@ subprojects {
             repositories {
                 maven {
                     name = "GitHubPackages"
-                    url = URI("https://maven.pkg.github.com/eclipse-lmos/arc")
+                    url = URI("https://maven.pkg.github.com/a2a-4k/a2a-4k")
                     credentials {
                         username = findProperty("GITHUB_USER")?.toString() ?: getenv("GITHUB_USER")
                         password = findProperty("GITHUB_TOKEN")?.toString() ?: getenv("GITHUB_TOKEN")
