@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.ktor.util.*
 import kotlinx.coroutines.*
-import org.a2a4k.models.*
+import io.github.a2a_4k.models.*
 
 /**
  * Interface for handling tasks in the A2A system.

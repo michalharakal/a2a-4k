@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.storage
+package io.github.a2a_4k.storage
 
-import org.a2a4k.InMemoryTaskStorage
+import io.github.a2a_4k.InMemoryTaskStorage
 import org.slf4j.LoggerFactory
 import java.util.*
 

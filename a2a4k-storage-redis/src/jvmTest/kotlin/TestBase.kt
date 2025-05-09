@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.storage.redis
+package io.github.a2a_4k.storage.redis
 
 import com.redis.testcontainers.RedisContainer
 import io.lettuce.core.RedisClient

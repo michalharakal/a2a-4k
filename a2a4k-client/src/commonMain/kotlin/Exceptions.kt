@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -12,7 +12,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import org.a2a4k.models.*
+import io.github.a2a_4k.models.*
 
 /**
  * List of Exceptions that can be thrown by the A2A4K client.

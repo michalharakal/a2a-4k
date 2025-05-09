@@ -20,8 +20,8 @@ Don't forget to check out the Langchain4j and Arc examples [here](https://github
 The `TaskHandler` interface is the core component for handling tasks in the A2A system. It's used to call an Agent of your choice. Here's a simple example of implementing a TaskHandler:
 
 ```kotlin
-import org.a2a4k.TaskHandler
-import org.a2a4k.models.*
+import io.github.a2a_4k.TaskHandler
+import io.github.a2a_4k.models.*
 
 // Custom TaskHandler that calls your Agent
 class MyAgentTaskHandler : TaskHandler {
@@ -58,8 +58,8 @@ class MyAgentTaskHandler : TaskHandler {
 ### Setting up the A2A Server
 
 ```kotlin
-import org.a2a4k.*
-import org.a2a4k.models.*
+import io.github.a2a_4k.*
+import io.github.a2a_4k.models.*
 
 // Create your TaskHandler
 val taskHandler = MyAgentTaskHandler()
@@ -102,8 +102,8 @@ server.start()
 ### Client-side: Interacting with an A2A Server
 
 ```kotlin
-import org.a2a4k.A2AClient
-import org.a2a4k.models.*
+import io.github.a2a_4k.A2AClient
+import io.github.a2a_4k.models.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {

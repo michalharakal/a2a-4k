@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,7 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
-import org.a2a4k.models.AgentCard
+import io.github.a2a_4k.models.AgentCard
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicReference
 

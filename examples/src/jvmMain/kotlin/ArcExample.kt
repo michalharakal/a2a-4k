@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.arc.serveA2A
-import org.a2a4k.models.toUserMessage
+import io.github.a2a_4k.arc.serveA2A
+import io.github.a2a_4k.models.toUserMessage
 import org.eclipse.lmos.arc.agents.agent.Skill
 import org.eclipse.lmos.arc.agents.agents
 

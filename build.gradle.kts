@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 import java.lang.System.getenv
 import java.net.URI
 
-group = "org.a2a4k"
+group = "io.github.a2a-4k"
 version = project.findProperty("version") as String
 
 plugins {
@@ -24,7 +24,7 @@ plugins {
 }
 
 subprojects {
-    group = "org.a2a4k"
+    group = "io.github.a2a-4k"
 
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.multiplatform")

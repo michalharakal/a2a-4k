@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -14,27 +14,27 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.CancelTaskRequest
-import org.a2a4k.models.CancelTaskResponse
-import org.a2a4k.models.GetTaskPushNotificationRequest
-import org.a2a4k.models.GetTaskPushNotificationResponse
-import org.a2a4k.models.GetTaskRequest
-import org.a2a4k.models.GetTaskResponse
-import org.a2a4k.models.JsonRpcRequest
-import org.a2a4k.models.Message
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.SendTaskRequest
-import org.a2a4k.models.SendTaskResponse
-import org.a2a4k.models.SetTaskPushNotificationRequest
-import org.a2a4k.models.SetTaskPushNotificationResponse
-import org.a2a4k.models.StringValue
-import org.a2a4k.models.TaskIdParams
-import org.a2a4k.models.TaskPushNotificationConfig
-import org.a2a4k.models.TaskQueryParams
-import org.a2a4k.models.TaskSendParams
-import org.a2a4k.models.TaskState
-import org.a2a4k.models.TextPart
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.CancelTaskRequest
+import io.github.a2a_4k.models.CancelTaskResponse
+import io.github.a2a_4k.models.GetTaskPushNotificationRequest
+import io.github.a2a_4k.models.GetTaskPushNotificationResponse
+import io.github.a2a_4k.models.GetTaskRequest
+import io.github.a2a_4k.models.GetTaskResponse
+import io.github.a2a_4k.models.JsonRpcRequest
+import io.github.a2a_4k.models.Message
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.SendTaskRequest
+import io.github.a2a_4k.models.SendTaskResponse
+import io.github.a2a_4k.models.SetTaskPushNotificationRequest
+import io.github.a2a_4k.models.SetTaskPushNotificationResponse
+import io.github.a2a_4k.models.StringValue
+import io.github.a2a_4k.models.TaskIdParams
+import io.github.a2a_4k.models.TaskPushNotificationConfig
+import io.github.a2a_4k.models.TaskQueryParams
+import io.github.a2a_4k.models.TaskSendParams
+import io.github.a2a_4k.models.TaskState
+import io.github.a2a_4k.models.TextPart
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

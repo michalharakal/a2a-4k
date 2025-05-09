@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.Authentication
-import org.a2a4k.models.Capabilities
-import org.a2a4k.models.Skill
-import org.a2a4k.models.Task
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.Authentication
+import io.github.a2a_4k.models.Capabilities
+import io.github.a2a_4k.models.Skill
+import io.github.a2a_4k.models.Task
 
 val capabilities = Capabilities(
     streaming = true,

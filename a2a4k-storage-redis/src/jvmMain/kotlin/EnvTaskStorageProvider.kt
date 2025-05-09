@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.lettuce.core.RedisURI
 import io.lettuce.core.cluster.RedisClusterClient
-import org.a2a4k.storage.TaskStorage
-import org.a2a4k.storage.TaskStorageProvider
+import io.github.a2a_4k.storage.TaskStorage
+import io.github.a2a_4k.storage.TaskStorageProvider
 
 /**
  */

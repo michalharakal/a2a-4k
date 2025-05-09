@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.models
+package io.github.a2a_4k.models
 
 import kotlinx.datetime.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.a2a4k.models.TaskState.COMPLETED
-import org.a2a4k.models.TaskState.FAILED
-import org.a2a4k.models.TaskState.WORKING
+import io.github.a2a_4k.models.TaskState.COMPLETED
+import io.github.a2a_4k.models.TaskState.FAILED
+import io.github.a2a_4k.models.TaskState.WORKING
 
 // Marker interface for streaming task results
 @Serializable

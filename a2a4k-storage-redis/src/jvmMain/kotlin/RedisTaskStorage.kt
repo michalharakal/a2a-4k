@@ -1,19 +1,19 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.lettuce.core.AbstractRedisClient
 import io.lettuce.core.RedisClient
 import io.lettuce.core.cluster.RedisClusterClient
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.Task
-import org.a2a4k.models.a2aJson
-import org.a2a4k.models.fromJson
-import org.a2a4k.models.toJson
-import org.a2a4k.storage.TaskStorage
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.Task
+import io.github.a2a_4k.models.a2aJson
+import io.github.a2a_4k.models.fromJson
+import io.github.a2a_4k.models.toJson
+import io.github.a2a_4k.storage.TaskStorage
 
 /**
  * Redis implementation of the TaskStorage interface.

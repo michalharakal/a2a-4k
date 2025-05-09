@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.models.Artifact
-import org.a2a4k.models.Message
-import org.a2a4k.models.Task
-import org.a2a4k.models.TaskState
-import org.a2a4k.models.TaskStatus
-import org.a2a4k.models.TextPart
+import io.github.a2a_4k.models.Artifact
+import io.github.a2a_4k.models.Message
+import io.github.a2a_4k.models.Task
+import io.github.a2a_4k.models.TaskState
+import io.github.a2a_4k.models.TaskStatus
+import io.github.a2a_4k.models.TextPart
 
 /**
  * A simple TaskHandler that calls your Agent.

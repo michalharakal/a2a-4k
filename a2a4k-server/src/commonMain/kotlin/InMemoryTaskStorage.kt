@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.Task
-import org.a2a4k.storage.TaskStorage
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.Task
+import io.github.a2a_4k.storage.TaskStorage
 import java.util.concurrent.ConcurrentHashMap
 
 /**

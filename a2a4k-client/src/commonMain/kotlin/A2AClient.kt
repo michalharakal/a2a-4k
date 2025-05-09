@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import io.ktor.client.*
 import io.ktor.client.plugins.*
@@ -13,7 +13,7 @@ import io.ktor.utils.io.core.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.a2a4k.models.*
+import io.github.a2a_4k.models.*
 import java.util.UUID
 
 /**

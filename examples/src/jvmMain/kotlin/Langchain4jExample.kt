@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import dev.langchain4j.model.openai.OpenAiChatModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.Capabilities
-import org.a2a4k.models.Message
-import org.a2a4k.models.toUserMessage
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.Capabilities
+import io.github.a2a_4k.models.Message
+import io.github.a2a_4k.models.toUserMessage
 
 /**
  * Example using LangChain4j.

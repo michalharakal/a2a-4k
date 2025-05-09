@@ -1,13 +1,13 @@
 // SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.arc
+package io.github.a2a_4k.arc
 
-import org.a2a4k.A2AServer
-import org.a2a4k.BasicTaskManager
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.Capabilities
-import org.a2a4k.models.Skill
+import io.github.a2a_4k.A2AServer
+import io.github.a2a_4k.BasicTaskManager
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.Capabilities
+import io.github.a2a_4k.models.Skill
 import org.eclipse.lmos.arc.agents.ArcAgents
 import org.eclipse.lmos.arc.agents.ConversationAgent
 

@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.arc
+package io.github.a2a_4k.arc
 
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.TaskHandler
-import org.a2a4k.models.Task
-import org.a2a4k.models.content
+import io.github.a2a_4k.TaskHandler
+import io.github.a2a_4k.models.Task
+import io.github.a2a_4k.models.content
 import org.eclipse.lmos.arc.agents.AgentProvider
 import org.eclipse.lmos.arc.agents.ConversationAgent
 import org.eclipse.lmos.arc.agents.User

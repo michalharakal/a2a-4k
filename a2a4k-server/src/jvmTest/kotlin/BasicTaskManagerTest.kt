@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.models.*
+import io.github.a2a_4k.models.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
