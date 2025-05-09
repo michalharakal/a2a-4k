@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import io.github.a2a_4k.arc.serveA2A
 import io.github.a2a_4k.models.toUserMessage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.eclipse.lmos.arc.agents.agent.Skill
 import org.eclipse.lmos.arc.agents.agents
 

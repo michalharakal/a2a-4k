@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import kotlinx.coroutines.runBlocking
 import io.github.a2a_4k.models.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

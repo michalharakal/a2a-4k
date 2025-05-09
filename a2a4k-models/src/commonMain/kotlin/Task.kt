@@ -3,12 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k.models
 
-import kotlinx.datetime.*
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import io.github.a2a_4k.models.TaskState.COMPLETED
 import io.github.a2a_4k.models.TaskState.FAILED
 import io.github.a2a_4k.models.TaskState.WORKING
+import kotlinx.datetime.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 // Marker interface for streaming task results
 @Serializable

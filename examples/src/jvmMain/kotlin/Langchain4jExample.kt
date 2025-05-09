@@ -4,12 +4,12 @@
 package io.github.a2a_4k
 
 import dev.langchain4j.model.openai.OpenAiChatModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import io.github.a2a_4k.models.AgentCard
 import io.github.a2a_4k.models.Capabilities
 import io.github.a2a_4k.models.Message
 import io.github.a2a_4k.models.toUserMessage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 /**
  * Example using LangChain4j.

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.sse.*
@@ -13,7 +14,6 @@ import io.ktor.utils.io.core.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import io.github.a2a_4k.models.*
 import java.util.UUID
 
 /**

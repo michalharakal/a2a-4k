@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import io.lettuce.core.RedisURI
-import io.lettuce.core.cluster.RedisClusterClient
 import io.github.a2a_4k.storage.TaskStorage
 import io.github.a2a_4k.storage.TaskStorageProvider
+import io.lettuce.core.RedisURI
+import io.lettuce.core.cluster.RedisClusterClient
 
 /**
  */

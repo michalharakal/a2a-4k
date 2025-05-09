@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
+import io.github.a2a_4k.models.GetTaskResponse
 import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import io.github.a2a_4k.models.*
-import io.github.a2a_4k.models.GetTaskResponse
 
 /**
  * Interface for managing tasks in the A2A system.

@@ -3,14 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.ktor.server.sse.*
-import io.ktor.sse.*
-import kotlinx.serialization.SerializationException
 import io.github.a2a_4k.models.AgentCard
 import io.github.a2a_4k.models.CancelTaskRequest
 import io.github.a2a_4k.models.ErrorResponse
@@ -27,6 +19,14 @@ import io.github.a2a_4k.models.TaskResubscriptionRequest
 import io.github.a2a_4k.models.UnknownMethodRequest
 import io.github.a2a_4k.models.toJson
 import io.github.a2a_4k.models.toJsonRpcRequest
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.sse.*
+import io.ktor.sse.*
+import kotlinx.serialization.SerializationException
 import org.slf4j.LoggerFactory
 
 /**

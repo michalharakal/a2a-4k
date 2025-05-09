@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import kotlinx.coroutines.runBlocking
 import io.github.a2a_4k.models.Artifact
 import io.github.a2a_4k.models.Message
 import io.github.a2a_4k.models.Task
 import io.github.a2a_4k.models.TaskState
 import io.github.a2a_4k.models.TaskStatus
 import io.github.a2a_4k.models.TextPart
+import kotlinx.coroutines.runBlocking
 
 /**
  * A simple TaskHandler that calls your Agent.

@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import io.github.a2a_4k.models.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

@@ -3,17 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.sse.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 import io.github.a2a_4k.models.AgentCard
 import io.github.a2a_4k.models.CancelTaskRequest
 import io.github.a2a_4k.models.CancelTaskResponse
@@ -35,6 +24,17 @@ import io.github.a2a_4k.models.TaskQueryParams
 import io.github.a2a_4k.models.TaskSendParams
 import io.github.a2a_4k.models.TaskState
 import io.github.a2a_4k.models.TextPart
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.sse.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
