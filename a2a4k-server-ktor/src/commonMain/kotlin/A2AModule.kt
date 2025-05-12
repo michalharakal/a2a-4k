@@ -21,6 +21,7 @@ import io.github.a2a_4k.models.toJson
 import io.github.a2a_4k.models.toJsonRpcRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -44,8 +45,17 @@ import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger(A2AServer::class.java)
 
-fun Application.a2aModule(endpoint: String, taskManager: TaskManager, agentCard: AgentCard) {
+fun Application.a2aModule(endpoint: String, taskManager: TaskManager, agentCard: AgentCard, devMode: Boolean) {
     install(SSE)
+    if (devMode) {
+        install(CORS) {
+            allowMethod(HttpMethod.Options)
+            allowMethod(HttpMethod.Get)
+            allowMethod(HttpMethod.Post)
+            anyHost()
+        }
+    }
+
     routing {
         sse {
             try {

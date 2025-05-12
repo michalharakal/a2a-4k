@@ -21,11 +21,13 @@ import org.eclipse.lmos.arc.agents.ConversationAgent
  *
  * @param wait Whether the server should block the current thread. Default is true.
  * @param port The port on which the server will listen. If null, defaults to 5001.
+ * @param devMode Whether to run the server in development mode. Default is false.
  * @throws IllegalStateException If no agents are found in the ArcAgents instance.
  */
 fun ArcAgents.serveA2A(
     wait: Boolean = true,
     port: Int? = null,
+    devMode: Boolean = false,
 ) {
     // Find the agent to call.
     val agent = getAgents().firstOrNull() as ConversationAgent?
@@ -68,5 +70,5 @@ fun ArcAgents.serveA2A(
     )
 
     // Start the server
-    server.start(wait = wait)
+    server.start(wait = wait, devMode = devMode)
 }

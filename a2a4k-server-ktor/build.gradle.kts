@@ -11,6 +11,7 @@ kotlin {
                 api(project(":a2a4k-models"))
                 implementation(libs.bundles.kotlinx)
                 implementation(libs.ktor.server.sse)
+                implementation(libs.ktor.server.cors)
                 implementation(libs.slf4j.api)
             }
         }

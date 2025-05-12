@@ -21,7 +21,7 @@ fun main() = runBlocking {
     agents {
         agent {
             name = "MyAgent"
-            model { "gpt-4o-mini" }
+            model { "gpt-4o" }
             skills = listOf(
                 Skill(
                     id = "greeting",
@@ -34,7 +34,7 @@ fun main() = runBlocking {
                 """ You are a helpful assistant. Greet the user with "Hello, from A2A"! """
             }
         }
-    }.serveA2A(wait = false)
+    }.serveA2A(wait = true, devMode = true)
 
     // Wait for the server to start
     delay(1_000)
