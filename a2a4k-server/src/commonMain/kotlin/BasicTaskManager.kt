@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.Collections.synchronizedList
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.measureTime
 
 /**
  * In-memory implementation of the TaskManager interface.
@@ -73,7 +74,7 @@ class BasicTaskManager(
     /**
      * {@inheritDoc}
      *
-     * This implementation creates or updates a task in the in-memory store.
+     * This implementation creates or updates a task in the memory store.
      * If a push notification configuration is provided, it is stored as well.
      * If an error occurs during the operation, an InternalError is returned.
      */
@@ -94,7 +95,10 @@ class BasicTaskManager(
             pushNotificationConfig?.let { notificationPublisher?.publish(task.working(), it) }
 
             // Send Task to Agent
-            val handledTask = taskHandler.handle(task)
+            val handledTask: Task
+            val duration = measureTime {
+                handledTask = taskHandler.handle(task)
+            }
             taskStorage.store(handledTask)
 
             // Send push notification
@@ -102,7 +106,12 @@ class BasicTaskManager(
 
             // Return the task with appropriate history length
             val taskResult = appendTaskHistory(handledTask, taskSendParams.historyLength)
-            SendTaskResponse(id = request.id, result = taskResult)
+
+            val responseTime = (duration.inWholeMilliseconds.toDouble() / 1000).toString()
+            SendTaskResponse(
+                id = request.id,
+                result = taskResult.copy(metadata = taskResult.metadata + mapOf("responseTime" to responseTime))
+            )
         } catch (e: Exception) {
             log.error("Error while sending task: ${e.message}")
             SendTaskResponse(
