@@ -16,14 +16,15 @@ on:
 
 jobs:
   CI:
-    uses: eclipse-lmos/.github/.github/workflows/gradle-release.yml@main
+    uses: eclipse-lmos/.github/.github/workflows/gradle-release-app.yml@main
     permissions:
       contents: write
       packages: write
     secrets:
       oss-username: ${{ secrets.OSSRH_USERNAME }}
       oss-password: ${{ secrets.OSSRH_PASSWORD }}
-      bot-token: ${{ secrets.LMOS_BOT_TOKEN }}
+      bot-app-id: ${{ secrets.COMMITER_APPID }}
+      bot-private-key: ${{ secrets.COMMITER_KEY }}
       signing-key-id: ${{ secrets.GPG_SUBKEY_ID }}
       signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
       signing-key-password: ${{ secrets.GPG_PASSPHRASE }}
