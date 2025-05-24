@@ -7,17 +7,21 @@
 
 A2A-4K is a kotlin implementation of the Agent2Agent (A2A) protocol (https://github.com/google/A2A).
 
+Check out the examples in the `examples` directory for a quick start.
+
 The project is currently very much WIP and looking for contributors.
 
 ## Usage Examples
+
+Don't forget to check out the Langchain4j and Arc examples [here](https://github.com/a2a-4k/a2a-4k/tree/main/examples/src/jvmMain/kotlin).
 
 ### Server-side: Implementing a TaskHandler
 
 The `TaskHandler` interface is the core component for handling tasks in the A2A system. It's used to call an Agent of your choice. Here's a simple example of implementing a TaskHandler:
 
 ```kotlin
-import org.a2a4k.TaskHandler
-import org.a2a4k.models.*
+import io.github.a2a_4k.TaskHandler
+import io.github.a2a_4k.models.*
 
 // Custom TaskHandler that calls your Agent
 class MyAgentTaskHandler : TaskHandler {
@@ -54,8 +58,8 @@ class MyAgentTaskHandler : TaskHandler {
 ### Setting up the A2A Server
 
 ```kotlin
-import org.a2a4k.*
-import org.a2a4k.models.*
+import io.github.a2a_4k.*
+import io.github.a2a_4k.models.*
 
 // Create your TaskHandler
 val taskHandler = MyAgentTaskHandler()
@@ -98,8 +102,8 @@ server.start()
 ### Client-side: Interacting with an A2A Server
 
 ```kotlin
-import org.a2a4k.A2AClient
-import org.a2a4k.models.*
+import io.github.a2a_4k.A2AClient
+import io.github.a2a_4k.models.*
 import kotlinx.coroutines.runBlocking
 
 fun main() = runBlocking {
@@ -169,6 +173,39 @@ This module provides client-side functionality for communicating with A2A server
 - Support for streaming responses
 - Error handling
 
+### a2a4k-storage-redis
+
+This module provides a Redis implementation of the TaskStorage interface, allowing tasks and notification configurations to be stored in Redis.
+
+## Using RedisTaskStorage
+
+The A2A-4K project includes a Redis implementation of the TaskStorage interface, 
+which allows you to store tasks and notification configurations in Redis instead of in-memory. 
+
+This provides several benefits:
+
+- **Persistence**: Tasks and configurations are stored in Redis and survive application restarts
+- **Scalability**: Multiple instances of your application can share the same Redis database
+- **Performance**: Redis offers high-performance storage with configurable persistence options
+
+To use RedisTaskStorage, add the following dependency to your project:
+
+```kotlin
+// Gradle Kotlin DSL
+implementation("org.a2a4k:a2a4k-storage-redis:$a2a4kVersion")
+```
+
+and then set the following environment variables / system properties:
+
+- `A2A_STORAGE_REDIS_HOST`: The hostname or IP address of your Redis server (required)
+- `A2A_STORAGE_REDIS_PORT`: The port number of your Redis server (optional, defaults to Redis standard port)
+- `A2A_STORAGE_REDIS_USERNAME`: Username for Redis authentication (optional)
+- `A2A_STORAGE_REDIS_PASSWORD`: Password for Redis authentication (optional)
+- `A2A_STORAGE_REDIS_SSL`: Set to "true" to enable SSL connection (optional, defaults to false)
+- `A2A_STORAGE_REDIS_TLS`: Set to "true" to enable TLS connection (optional, defaults to false)
+
+
+This will automatically load and configure the RedisTaskStorage.
 
 ## Code of Conduct
 
@@ -177,7 +214,7 @@ This project has adopted the [Contributor Covenant](https://www.contributor-cove
 By participating in this project, you agree to abide by its [Code of Conduct](./CODE_OF_CONDUCT.md) at all times.
 
 ## Licensing
-Copyright (c) 2025 Deutsche Telekom AG and others.
+Copyright (c) 2025
 
 Sourcecode licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0) (the "License"); you may not use this project except in compliance with the License.
 

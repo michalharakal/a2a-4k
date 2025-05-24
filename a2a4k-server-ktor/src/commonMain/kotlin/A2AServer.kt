@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.AgentCard
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -12,7 +13,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
-import org.a2a4k.models.AgentCard
 import org.slf4j.LoggerFactory
 import java.util.concurrent.atomic.AtomicReference
 
@@ -72,11 +72,11 @@ class A2AServer(
      * The server starts in a blocking mode (wait = true), which means this method
      * will not return until the server is stopped.
      */
-    fun start(wait: Boolean = false) {
+    fun start(wait: Boolean = false, devMode: Boolean = false) {
         log.info("Starting server on port $port")
         server.set(
             embeddedServer(Netty, port = port, host = host) {
-                a2aModule(endpoint, taskManager, agentCard)
+                a2aModule(endpoint, taskManager, agentCard, devMode)
             }.start(wait = wait),
         )
     }

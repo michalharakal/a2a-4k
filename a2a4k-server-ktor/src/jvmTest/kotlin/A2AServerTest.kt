@@ -1,8 +1,29 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.CancelTaskRequest
+import io.github.a2a_4k.models.CancelTaskResponse
+import io.github.a2a_4k.models.GetTaskPushNotificationRequest
+import io.github.a2a_4k.models.GetTaskPushNotificationResponse
+import io.github.a2a_4k.models.GetTaskRequest
+import io.github.a2a_4k.models.GetTaskResponse
+import io.github.a2a_4k.models.JsonRpcRequest
+import io.github.a2a_4k.models.Message
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.SendTaskRequest
+import io.github.a2a_4k.models.SendTaskResponse
+import io.github.a2a_4k.models.SetTaskPushNotificationRequest
+import io.github.a2a_4k.models.SetTaskPushNotificationResponse
+import io.github.a2a_4k.models.StringValue
+import io.github.a2a_4k.models.TaskIdParams
+import io.github.a2a_4k.models.TaskPushNotificationConfig
+import io.github.a2a_4k.models.TaskQueryParams
+import io.github.a2a_4k.models.TaskSendParams
+import io.github.a2a_4k.models.TaskState
+import io.github.a2a_4k.models.TextPart
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -14,26 +35,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.CancelTaskRequest
-import org.a2a4k.models.CancelTaskResponse
-import org.a2a4k.models.GetTaskPushNotificationRequest
-import org.a2a4k.models.GetTaskPushNotificationResponse
-import org.a2a4k.models.GetTaskRequest
-import org.a2a4k.models.GetTaskResponse
-import org.a2a4k.models.JsonRpcRequest
-import org.a2a4k.models.Message
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.SendTaskRequest
-import org.a2a4k.models.SendTaskResponse
-import org.a2a4k.models.SetTaskPushNotificationRequest
-import org.a2a4k.models.SetTaskPushNotificationResponse
-import org.a2a4k.models.TaskIdParams
-import org.a2a4k.models.TaskPushNotificationConfig
-import org.a2a4k.models.TaskQueryParams
-import org.a2a4k.models.TaskSendParams
-import org.a2a4k.models.TaskState
-import org.a2a4k.models.TextPart
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -117,7 +118,7 @@ class A2AServerTest {
     fun `test GetTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
-        val requestId = "req-123"
+        val requestId = StringValue("req-123")
         val request = GetTaskRequest(
             id = requestId,
             params = TaskQueryParams(id = taskId, historyLength = 10),
@@ -144,7 +145,7 @@ class A2AServerTest {
         // Given
         val taskId = "test-task-123"
         val sessionId = "session-123"
-        val requestId = "req-456"
+        val requestId = StringValue("req-456")
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
         val message = Message(role = "user", parts = listOf(textPart))
 
@@ -179,7 +180,7 @@ class A2AServerTest {
 
         // When - Get task
         val getRequest = GetTaskRequest(
-            id = "get-req-123",
+            id = StringValue("get-req-123"),
             params = TaskQueryParams(id = taskId, historyLength = 10),
         )
 
@@ -192,7 +193,7 @@ class A2AServerTest {
         val getResponseBody = getResponse.bodyAsText()
         val getTaskResponse = json.decodeFromString<GetTaskResponse>(getResponseBody)
 
-        assertEquals("get-req-123", getTaskResponse.id)
+        assertEquals(StringValue("get-req-123"), getTaskResponse.id)
         assertNotNull(getTaskResponse.result)
         assertNull(getTaskResponse.error)
         assertEquals(taskId, getTaskResponse.result?.id)
@@ -205,7 +206,7 @@ class A2AServerTest {
     fun `test CancelTaskRequest for non-existent task`(): Unit = runBlocking {
         // Given
         val taskId = "non-existent-task"
-        val requestId = "req-cancel"
+        val requestId = StringValue("req-cancel")
         val request = CancelTaskRequest(
             id = requestId,
             params = TaskIdParams(id = taskId),
@@ -232,13 +233,13 @@ class A2AServerTest {
         // Given
         val taskId = "push-task-123"
         val sessionId = "session-push"
-        val requestId = "req-push"
+        val requestId = StringValue("req-push")
         val textPart = TextPart(text = "Hello", metadata = emptyMap())
         val message = Message(role = "user", parts = listOf(textPart))
 
         // Create task
         val sendRequest = SendTaskRequest(
-            id = "send-req-123",
+            id = StringValue("send-req-123"),
             params = TaskSendParams(
                 id = taskId,
                 sessionId = sessionId,
@@ -276,7 +277,7 @@ class A2AServerTest {
 
         // When - Get push notification
         val getPushRequest = GetTaskPushNotificationRequest(
-            id = "get-push-req-123",
+            id = StringValue("get-push-req-123"),
             params = TaskIdParams(id = taskId),
         )
 
@@ -289,7 +290,7 @@ class A2AServerTest {
         val getPushResponseBody = getPushResponse.bodyAsText()
         val getTaskPushResponse = json.decodeFromString<GetTaskPushNotificationResponse>(getPushResponseBody)
 
-        assertEquals("get-push-req-123", getTaskPushResponse.id)
+        assertEquals(StringValue("get-push-req-123"), getTaskPushResponse.id)
         assertNotNull(getTaskPushResponse.result)
         assertNull(getTaskPushResponse.error)
         assertEquals(taskId, getTaskPushResponse.result?.id)

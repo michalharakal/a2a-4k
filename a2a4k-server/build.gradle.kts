@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -7,7 +7,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":a2a4k-models"))
+                api(project(":a2a4k-models"))
                 implementation(libs.bundles.kotlinx)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.server.sse)

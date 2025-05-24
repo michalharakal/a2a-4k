@@ -1,8 +1,9 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.sse.*
@@ -13,7 +14,6 @@ import io.ktor.utils.io.core.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.a2a4k.models.*
 import java.util.UUID
 
 /**
@@ -86,7 +86,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): GetTaskResponse {
         val request = GetTaskRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskQueryParams(id = taskId, historyLength = historyLength),
         )
 
@@ -120,7 +120,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): SendTaskResponse {
         val request = SendTaskRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskSendParams(
                 id = taskId,
                 sessionId = sessionId,
@@ -159,7 +159,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): Flow<SendTaskStreamingResponse> = flow {
         val request = SendTaskStreamingRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskSendParams(
                 id = taskId,
                 sessionId = sessionId,
@@ -198,7 +198,7 @@ class A2AClient(
      */
     suspend fun cancelTask(taskId: String, requestId: String = generateRequestId()): CancelTaskResponse {
         val request = CancelTaskRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskIdParams(id = taskId),
         )
 
@@ -228,7 +228,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): SetTaskPushNotificationResponse {
         val request = SetTaskPushNotificationRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskPushNotificationConfig(
                 id = taskId,
                 pushNotificationConfig = config,
@@ -259,7 +259,7 @@ class A2AClient(
         requestId: String = generateRequestId(),
     ): GetTaskPushNotificationResponse {
         val request = GetTaskPushNotificationRequest(
-            id = requestId,
+            id = StringValue(requestId),
             params = TaskIdParams(id = taskId),
         )
 
@@ -286,7 +286,7 @@ class A2AClient(
         taskId: String,
         requestId: String = generateRequestId(),
     ): Flow<SendTaskStreamingResponse> = flow {
-        val request = TaskResubscriptionRequest(id = requestId, params = TaskQueryParams(id = taskId))
+        val request = TaskResubscriptionRequest(id = StringValue(requestId), params = TaskQueryParams(id = taskId))
 
         client.sse(request = {
             url(apiUrl)

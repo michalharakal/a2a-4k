@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.models
+package io.github.a2a_4k.models
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -16,20 +16,20 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 @JsonClassDiscriminator("method")
 sealed class JsonRpcRequest {
     abstract val jsonrpc: String
-    abstract val id: String?
+    abstract val id: StringOrInt?
 }
 
 @Serializable
 data class UnknownMethodRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
 ) : JsonRpcRequest()
 
 @Serializable
 @SerialName("tasks/send")
 data class SendTaskRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskSendParams,
 ) : JsonRpcRequest()
 
@@ -37,7 +37,7 @@ data class SendTaskRequest(
 @SerialName("tasks/get")
 data class GetTaskRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskQueryParams,
 ) : JsonRpcRequest()
 
@@ -45,7 +45,7 @@ data class GetTaskRequest(
 @SerialName("tasks/cancel")
 data class CancelTaskRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskIdParams,
 ) : JsonRpcRequest()
 
@@ -53,7 +53,7 @@ data class CancelTaskRequest(
 @SerialName("tasks/pushNotification/set")
 data class SetTaskPushNotificationRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskPushNotificationConfig,
 ) : JsonRpcRequest()
 
@@ -61,7 +61,7 @@ data class SetTaskPushNotificationRequest(
 @SerialName("tasks/pushNotification/get")
 data class GetTaskPushNotificationRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskIdParams,
 ) : JsonRpcRequest()
 
@@ -69,7 +69,7 @@ data class GetTaskPushNotificationRequest(
 @SerialName("tasks/resubscribe")
 data class TaskResubscriptionRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskQueryParams,
 ) : JsonRpcRequest()
 
@@ -77,7 +77,7 @@ data class TaskResubscriptionRequest(
 @SerialName("tasks/sendSubscribe")
 data class SendTaskStreamingRequest(
     override val jsonrpc: String = "2.0",
-    override val id: String? = null,
+    override val id: StringOrInt? = null,
     val params: TaskSendParams,
 ) : JsonRpcRequest()
 

@@ -1,8 +1,12 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.notifications
+package io.github.a2a_4k.notifications
 
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.Task
+import io.github.a2a_4k.models.a2aJson
+import io.github.a2a_4k.models.toJson
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -12,10 +16,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.Task
-import org.a2a4k.models.a2aJson
-import org.a2a4k.models.toJson
 import org.slf4j.LoggerFactory
 
 /**

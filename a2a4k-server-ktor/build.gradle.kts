@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -11,6 +11,7 @@ kotlin {
                 api(project(":a2a4k-models"))
                 implementation(libs.bundles.kotlinx)
                 implementation(libs.ktor.server.sse)
+                implementation(libs.ktor.server.cors)
                 implementation(libs.slf4j.api)
                 implementation(libs.ktor.client.cio)
             }

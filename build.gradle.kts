@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 import java.lang.System.getenv
 import java.net.URI
 
-group = "org.a2a4k"
+group = "io.github.a2a-4k"
 version = project.findProperty("version") as String
 
 plugins {
@@ -24,7 +24,7 @@ plugins {
 }
 
 subprojects {
-    group = "org.a2a4k"
+    group = "io.github.a2a-4k"
 
     apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.multiplatform")
@@ -61,8 +61,8 @@ subprojects {
 
     if (project.name != "arc-gradle-plugin") {
         mavenPublishing {
-            publishToMavenCentral(SonatypeHost.DEFAULT, automaticRelease = true)
-            // signAllPublications()
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+            signAllPublications()
 
             pom {
                 name = "A2A4K"
@@ -90,7 +90,7 @@ subprojects {
             repositories {
                 maven {
                     name = "GitHubPackages"
-                    url = URI("https://maven.pkg.github.com/eclipse-lmos/arc")
+                    url = URI("https://maven.pkg.github.com/a2a-4k/a2a-4k")
                     credentials {
                         username = findProperty("GITHUB_USER")?.toString() ?: getenv("GITHUB_USER")
                         password = findProperty("GITHUB_TOKEN")?.toString() ?: getenv("GITHUB_TOKEN")
@@ -101,6 +101,7 @@ subprojects {
     }
 
     repositories {
+        // mavenLocal() This somehow causes with js compilation
         mavenCentral()
         google()
     }
@@ -114,6 +115,7 @@ dependencies {
     kover(project("a2a4k-models"))
     kover(project("a2a4k-server"))
     kover(project("a2a4k-server-ktor"))
+    kover(project("a2a4k-storage-redis"))
     kover(project("a2a4k-client"))
 }
 

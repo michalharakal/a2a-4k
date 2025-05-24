@@ -1,10 +1,10 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k.storage
 
-import org.a2a4k.models.PushNotificationConfig
-import org.a2a4k.models.Task
+import io.github.a2a_4k.models.PushNotificationConfig
+import io.github.a2a_4k.models.Task
 
 /**
  * Interface for storing and retrieving tasks and their associated push notification configurations.

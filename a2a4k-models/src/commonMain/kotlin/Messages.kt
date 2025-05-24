@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.models
+package io.github.a2a_4k.models
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -19,12 +19,20 @@ data class Artifact(
     val lastChunk: Boolean? = null,
 )
 
+fun textArtifact(text: String): Artifact {
+    return Artifact(parts = listOf(TextPart(text)))
+}
+
 @Serializable
 data class Message(
     val role: String,
     val parts: List<Part>,
     val metadata: Map<String, String> = emptyMap(),
 )
+
+fun assistantMessage(text: String, metadata: Map<String, String> = emptyMap()): Message {
+    return Message(role = "assistant", parts = listOf(TextPart(text)), metadata = metadata)
+}
 
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
@@ -76,7 +84,7 @@ data class Provider(
 
 @Serializable
 data class Capabilities(
-    val streaming: Boolean? = null,
-    val pushNotifications: Boolean? = null,
-    val stateTransitionHistory: Boolean? = null,
+    val streaming: Boolean = false,
+    val pushNotifications: Boolean = false,
+    val stateTransitionHistory: Boolean = false,
 )

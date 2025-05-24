@@ -1,13 +1,13 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
+import io.github.a2a_4k.models.GetTaskResponse
 import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import org.a2a4k.models.*
-import org.a2a4k.models.GetTaskResponse
 
 /**
  * Interface for managing tasks in the A2A system.

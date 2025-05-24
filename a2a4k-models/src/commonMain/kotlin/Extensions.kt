@@ -1,7 +1,7 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k.models
+package io.github.a2a_4k.models
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -33,3 +33,10 @@ fun JsonRpcRequest.toJson() = a2aJson.encodeToString(JsonRpcRequest.serializer()
 fun JsonRpcResponse.toJson() = a2aJson.encodeToString(JsonRpcResponse.serializer(), this)
 fun AgentCard.toJson() = a2aJson.encodeToString(AgentCard.serializer(), this)
 fun Task.toJson() = a2aJson.encodeToString(Task.serializer(), this)
+fun PushNotificationConfig.toJson() = a2aJson.encodeToString(PushNotificationConfig.serializer(), this)
+inline fun <reified T> String.fromJson() = a2aJson.decodeFromString<T>(this)
+
+/**
+ * Helper function to get message content.
+ */
+fun Message.content() = (this.parts.firstOrNull() as TextPart).text

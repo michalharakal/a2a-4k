@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
-import org.a2a4k.models.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -179,7 +181,7 @@ class A2AClientTest {
 }
 
 class NoopTaskHandler : TaskHandler {
-    override fun handle(task: Task): Task {
-        return task
+    override fun handle(task: Task): Flow<TaskUpdate> {
+        return flowOf(StatusUpdate(status = TaskStatus(TaskState.COMPLETED)))
     }
 }

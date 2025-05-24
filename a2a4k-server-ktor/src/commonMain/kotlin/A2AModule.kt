@@ -1,32 +1,33 @@
-// SPDX-FileCopyrightText: 2025 Deutsche Telekom AG and others
+// SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
-package org.a2a4k
+package io.github.a2a_4k
 
+import io.github.a2a_4k.models.AgentCard
+import io.github.a2a_4k.models.CancelTaskRequest
+import io.github.a2a_4k.models.ErrorResponse
+import io.github.a2a_4k.models.GetTaskPushNotificationRequest
+import io.github.a2a_4k.models.GetTaskRequest
+import io.github.a2a_4k.models.InternalError
+import io.github.a2a_4k.models.InvalidRequestError
+import io.github.a2a_4k.models.JsonParseError
+import io.github.a2a_4k.models.MethodNotFoundError
+import io.github.a2a_4k.models.SendTaskRequest
+import io.github.a2a_4k.models.SendTaskStreamingRequest
+import io.github.a2a_4k.models.SetTaskPushNotificationRequest
+import io.github.a2a_4k.models.TaskResubscriptionRequest
+import io.github.a2a_4k.models.UnknownMethodRequest
+import io.github.a2a_4k.models.toJson
+import io.github.a2a_4k.models.toJsonRpcRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
 import io.ktor.sse.*
 import kotlinx.serialization.SerializationException
-import org.a2a4k.models.AgentCard
-import org.a2a4k.models.CancelTaskRequest
-import org.a2a4k.models.ErrorResponse
-import org.a2a4k.models.GetTaskPushNotificationRequest
-import org.a2a4k.models.GetTaskRequest
-import org.a2a4k.models.InternalError
-import org.a2a4k.models.InvalidRequestError
-import org.a2a4k.models.JsonParseError
-import org.a2a4k.models.MethodNotFoundError
-import org.a2a4k.models.SendTaskRequest
-import org.a2a4k.models.SendTaskStreamingRequest
-import org.a2a4k.models.SetTaskPushNotificationRequest
-import org.a2a4k.models.TaskResubscriptionRequest
-import org.a2a4k.models.UnknownMethodRequest
-import org.a2a4k.models.toJson
-import org.a2a4k.models.toJsonRpcRequest
 import org.slf4j.LoggerFactory
 
 /**
@@ -44,8 +45,17 @@ import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger(A2AServer::class.java)
 
-fun Application.a2aModule(endpoint: String, taskManager: TaskManager, agentCard: AgentCard) {
+fun Application.a2aModule(endpoint: String, taskManager: TaskManager, agentCard: AgentCard, devMode: Boolean) {
     install(SSE)
+    if (devMode) {
+        install(CORS) {
+            allowMethod(HttpMethod.Options)
+            allowMethod(HttpMethod.Get)
+            allowMethod(HttpMethod.Post)
+            anyHost()
+        }
+    }
+
     routing {
         sse {
             try {
