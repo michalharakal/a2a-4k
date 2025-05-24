@@ -2,10 +2,19 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+plugins {
+    id("org.jetbrains.compose") version "1.5.11"
+}
+
 kotlin {
     jvm()
 
-    wasmJs().nodejs()
+    wasmJs {
+        browser {
+            binaries.executable()
+        }
+        nodejs()
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -25,6 +34,13 @@ kotlin {
                 implementation("org.eclipse.lmos:arc-agents:0.124.0")
                 implementation("org.eclipse.lmos:arc-azure-client:0.124.0")
                 implementation(libs.slf4j.jdk14)
+            }
+        }
+
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.web.core)
             }
         }
     }
