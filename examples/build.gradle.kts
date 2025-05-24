@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 plugins {
-    id("org.jetbrains.compose") version "1.5.11"
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
+
 }
 
 kotlin {
@@ -24,6 +26,7 @@ kotlin {
                 implementation(project(":a2a4k-server-ktor"))
                 implementation(project(":a2a4k-server-arc"))
                 implementation(libs.ktor.client.core)
+                implementation(libs.kotlinx.coroutines)
                 implementation(libs.bundles.kotlinx)
             }
         }
@@ -40,7 +43,7 @@ kotlin {
         val wasmJsMain by getting {
             dependencies {
                 implementation(compose.runtime)
-                implementation(compose.web.core)
+                implementation(compose.html.core)
             }
         }
     }
