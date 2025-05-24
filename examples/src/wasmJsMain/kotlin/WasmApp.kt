@@ -8,7 +8,7 @@ import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 import io.github.a2a_4k.models.*
 import io.github.a2a_4k.models.TaskState
-import io.github.a2a_4k.utils.UuidUtil
+import io.github.a2a_4k.org.a2a4k.utils.UuidUtil
 
 fun main() {
     val scope = MainScope()

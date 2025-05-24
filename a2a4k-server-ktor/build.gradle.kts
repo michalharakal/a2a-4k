@@ -4,6 +4,7 @@
 
 kotlin {
     jvm()
+    wasmJs().nodejs()
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -14,6 +15,8 @@ kotlin {
                 implementation(libs.ktor.server.cors)
                 implementation(libs.slf4j.api)
                 implementation(libs.ktor.client.cio)
+                implementation("io.github.oshai:kotlin-logging:7.0.7")
+
             }
         }
 

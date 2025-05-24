@@ -4,6 +4,9 @@
 
 kotlin {
     jvm()
+    wasmJs().nodejs()
+
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -15,6 +18,9 @@ kotlin {
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.slf4j.api)
+                implementation("io.github.oshai:kotlin-logging:7.0.7")
+                implementation("co.touchlab:stately-concurrent-collections:2.1.0")
+
             }
         }
 
