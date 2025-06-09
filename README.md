@@ -11,6 +11,9 @@ Check out the examples in the `examples` directory for a quick start.
 
 The project is currently very much WIP and looking for contributors.
 
+We have examples uing Arc (https://eclipse.dev/lmos/arc2)
+and Langchain4j.
+
 ## Usage Examples
 
 Don't forget to check out the Langchain4j and Arc examples [here](https://github.com/a2a-4k/a2a-4k/tree/main/examples/src/jvmMain/kotlin).
