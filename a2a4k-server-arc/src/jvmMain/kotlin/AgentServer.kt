@@ -24,7 +24,7 @@ import org.eclipse.lmos.arc.agents.ConversationAgent
  * @param devMode Whether to run the server in development mode. Default is false.
  * @throws IllegalStateException If no agents are found in the ArcAgents instance.
  */
-fun ArcAgents.serveA2A(
+suspend fun ArcAgents.serveA2A(
     wait: Boolean = true,
     port: Int? = null,
     devMode: Boolean = false,
@@ -52,7 +52,7 @@ fun ArcAgents.serveA2A(
         defaultInputModes = listOf("text"),
         defaultOutputModes = listOf("text"),
         url = "",
-        skills = agent.skills?.map {
+        skills = agent.fetchSkills()?.map {
             Skill(
                 id = it.id,
                 name = it.name,

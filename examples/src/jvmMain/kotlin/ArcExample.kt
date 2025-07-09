@@ -22,14 +22,16 @@ fun main() = runBlocking {
         agent {
             name = "MyAgent"
             model { "gpt-4o" }
-            skills = listOf(
-                Skill(
-                    id = "greeting",
-                    name = "Greeting",
-                    description = "A simple greeting skill",
-                    tags = emptyList(),
-                ),
-            )
+            skills {
+                listOf(
+                    Skill(
+                        id = "greeting",
+                        name = "Greeting",
+                        description = "A simple greeting skill",
+                        tags = emptyList(),
+                    ),
+                )
+            }
             prompt {
                 """ You are a helpful assistant. Greet the user with "Hello, from A2A"! """
             }
