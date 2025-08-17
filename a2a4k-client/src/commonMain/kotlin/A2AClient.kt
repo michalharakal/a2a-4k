@@ -14,7 +14,7 @@ import io.ktor.utils.io.core.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 /**
  * A2AClient implements an Agent-to-Agent communication client based on the A2A protocol.
@@ -23,6 +23,7 @@ import java.util.UUID
  * the agent's metadata (agent card), sending and retrieving tasks, canceling tasks,
  * and managing push notification configurations.
  */
+@OptIn(kotlin.uuid.ExperimentalUuidApi::class)
 class A2AClient(
     baseUrl: String,
     endpoint: String = "/",
@@ -114,8 +115,8 @@ class A2AClient(
      */
     suspend fun sendTask(
         message: Message,
-        taskId: String = "task::${UUID.randomUUID()}",
-        sessionId: String = "session::${UUID.randomUUID()}",
+        taskId: String = "task::${Uuid.random()}",
+        sessionId: String = "session::${Uuid.random()}",
         historyLength: Int = 10,
         requestId: String = generateRequestId(),
     ): SendTaskResponse {
@@ -313,6 +314,6 @@ class A2AClient(
      * @return A unique string ID.
      */
     private fun generateRequestId(): String {
-        return "${UUID.randomUUID()}"
+        return "${Uuid.random()}"
     }
 }
