@@ -36,6 +36,7 @@ import io.github.a2a_4k.notifications.BasicNotificationPublisher
 import io.github.a2a_4k.notifications.NotificationPublisher
 import io.github.a2a_4k.storage.TaskStorage
 import io.github.a2a_4k.storage.loadTaskStorage
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -52,6 +53,7 @@ import kotlinx.coroutines.flow.flow
 expect fun createSafeChannelMap(): MutableMap<String, MutableList<Channel<Any>>>
 expect fun createSafeChannelList(): MutableList<Channel<Any>>
 
+@OptIn(kotlin.uuid.ExperimentalUuidApi::class)
 class BasicTaskManager(
     private val taskHandler: TaskHandler,
     private val taskStorage: TaskStorage = loadTaskStorage(),
@@ -300,7 +302,7 @@ class BasicTaskManager(
         return if (task == null) {
             val newTask = Task(
                 id = taskSendParams.id,
-                sessionId = taskSendParams.sessionId ?: randomUUID(),
+                sessionId = taskSendParams.sessionId ?: Uuid.random().toString(),
                 status = TaskStatus(state = TaskState.SUBMITTED),
                 history = listOf(taskSendParams.message),
             )
