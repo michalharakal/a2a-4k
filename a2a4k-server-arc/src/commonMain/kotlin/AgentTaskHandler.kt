@@ -21,19 +21,21 @@ import org.eclipse.lmos.arc.agents.conversation.Conversation
 import org.eclipse.lmos.arc.agents.conversation.UserMessage
 import org.eclipse.lmos.arc.agents.conversation.latest
 import org.eclipse.lmos.arc.core.Success
-import java.util.*
+import kotlin.uuid.Uuid
+import kotlin.uuid.ExperimentalUuidApi
 
 /**
  * A TaskHandler that provides the bridge between the A2A4K task system and the Arc agent system.
  */
+@OptIn(ExperimentalUuidApi::class)
 class AgentTaskHandler(private val agent: ConversationAgent, private val agentProvider: AgentProvider) : TaskHandler {
 
     override fun handle(task: Task): Flow<TaskUpdate> = flow {
         // Convert the Task to a Conversation
         val conversation = Conversation(
-            conversationId = task.sessionId ?: UUID.randomUUID().toString(),
+            conversationId = task.sessionId ?: Uuid.random().toString(),
             user = (task.metadata["user_id"])?.let { User(it.toString()) },
-            currentTurnId = (task.metadata["turn_id"])?.toString() ?: UUID.randomUUID().toString(),
+            currentTurnId = (task.metadata["turn_id"])?.toString() ?: Uuid.random().toString(),
             transcript = task.history?.map { m ->
                 when (m.role) {
                     "user" -> UserMessage(m.content())
