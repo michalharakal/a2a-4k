@@ -47,6 +47,6 @@ val agentCard = AgentCard(
 
 class NoopTaskHandler : TaskHandler {
     override fun handle(task: Task): Flow<TaskUpdate> {
-        return flowOf(StatusUpdate(status = TaskStatus(TaskState.COMPLETED)))
+        return flowOf(StatusUpdate(status = TaskStatus(TaskState.SUBMITTED), final = true))
     }
 }
