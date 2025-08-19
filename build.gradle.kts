@@ -13,14 +13,14 @@ group = "io.github.a2a-4k"
 version = project.findProperty("version") as String
 
 plugins {
-    kotlin("multiplatform") version "2.1.10" apply false
-    kotlin("plugin.serialization") version "2.1.10" apply false
-    id("org.jetbrains.dokka") version "2.0.0"
-    id("org.cyclonedx.bom") version "2.0.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.1"
-    id("net.researchgate.release") version "3.1.0"
-    id("com.vanniktech.maven.publish") version "0.31.0"
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.cyclonedx)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.release)
+    alias(libs.plugins.maven.publish)
 }
 
 subprojects {

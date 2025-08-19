@@ -21,8 +21,8 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation("org.eclipse.lmos:arc-agents:0.139.0")
-                implementation("org.eclipse.lmos:arc-azure-client:0.139.0")
+                implementation(libs.arc.agents)
+                implementation(libs.arc.azure.client)
             }
         }
 
@@ -30,14 +30,14 @@ kotlin {
             dependencies {
 
                 // Test dependencies
-                implementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-                implementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-                implementation("org.jetbrains.kotlin:kotlin-test:2.1.10")
+                implementation(libs.junit.jupiter.api)
+                implementation(libs.junit.jupiter.engine)
+                implementation(libs.kotlin.test)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.cio.jvm)
                 implementation(libs.ktor.serialization.kotlinx.json)
                 implementation(libs.ktor.client.content.negotiation)
-                implementation("io.mockk:mockk:1.13.10")
+                implementation(libs.mockk)
             }
         }
     }

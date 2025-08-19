@@ -6,6 +6,7 @@ package io.github.a2a_4k
 import io.github.a2a_4k.models.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -292,7 +293,7 @@ class BasicTaskManagerTest {
     }
 
     @Test
-    fun `test onResubscribeToTask returns error for non-existent task`() = runBlocking {
+    fun `test onResubscribeToTask returns error for non-existent task`() = runTest {
         // Given
         val taskId = "non-existent-task"
         val requestId = StringValue("req-resub")
