@@ -8,7 +8,11 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":a2a4k-server"))
-                implementation(libs.bundles.kotlinx)
+                implementation(libs.kotlinx.coroutines.slf4j)
+                implementation(libs.kotlinx.coroutines.jdk8)
+                implementation(libs.kotlinx.coroutines.reactor)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
             }
         }
 

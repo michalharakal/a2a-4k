@@ -12,7 +12,11 @@ kotlin {
                 implementation(project(":a2a4k-server-ktor"))
                 implementation(project(":a2a4k-server-arc"))
                 implementation(libs.ktor.client.core)
-                implementation(libs.bundles.kotlinx)
+                implementation(libs.kotlinx.coroutines.slf4j)
+                implementation(libs.kotlinx.coroutines.jdk8)
+                implementation(libs.kotlinx.coroutines.reactor)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
             }
         }
 
