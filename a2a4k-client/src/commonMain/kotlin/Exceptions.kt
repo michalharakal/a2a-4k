@@ -3,17 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k
 
-import io.github.a2a_4k.models.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.sse.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-
 /**
  * List of Exceptions that can be thrown by the A2A4K client.
  */

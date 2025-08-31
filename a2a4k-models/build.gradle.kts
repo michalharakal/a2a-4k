@@ -24,9 +24,6 @@ kotlin {
     // Linux
     linuxX64()
     
-    // Windows
-    mingwX64()
-    
     sourceSets {
         val commonMain by getting {
             dependencies {

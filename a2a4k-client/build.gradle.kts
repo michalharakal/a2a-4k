@@ -23,10 +23,7 @@ kotlin {
     
     // Linux
     linuxX64()
-    
-    // Windows
-    mingwX64()
-    
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -75,12 +72,6 @@ kotlin {
         val linuxX64Main by getting {
             dependencies {
                 implementation(libs.ktor.client.curl)
-            }
-        }
-
-        val mingwX64Main by getting {
-            dependencies {
-                implementation(libs.ktor.client.winhttp)
             }
         }
 
