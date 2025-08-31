@@ -3,10 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k.models
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertFailsWith
 
 class RequestConverterTest {
 
@@ -112,7 +112,7 @@ class RequestConverterTest {
         """.trimIndent()
 
         // When/Then
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             json.toJsonRpcRequest()
         }
     }

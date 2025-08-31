@@ -4,9 +4,10 @@
 package io.github.a2a_4k.models
 
 import kotlinx.serialization.json.Json
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class TaskTest {
 
@@ -187,12 +188,8 @@ class TaskTest {
         val jsonString = json.encodeToString(Task.serializer(), task)
 
         // Then - Verify that identifiers are serialized as strings
-        assert(jsonString.contains("\"id\":\"stable-id-format-test\"")) { 
-            "Task ID should be serialized as string" 
-        }
-        assert(jsonString.contains("\"sessionId\":\"stable-session-id\"")) { 
-            "Session ID should be serialized as string" 
-        }
+        assertTrue(jsonString.contains("\"id\":\"stable-id-format-test\""), "Task ID should be serialized as string")
+        assertTrue(jsonString.contains("\"sessionId\":\"stable-session-id\""), "Session ID should be serialized as string")
         
         // Verify canonical format consistency
         val deserializedTask = json.decodeFromString(Task.serializer(), jsonString)

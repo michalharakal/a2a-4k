@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k.models
 
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
