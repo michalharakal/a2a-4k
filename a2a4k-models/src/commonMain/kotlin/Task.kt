@@ -64,7 +64,12 @@ data class Task(
      */
     fun updateStatus(update: TaskStatus): Task {
         if (update.message == null) return copy(status = update)
-        return copy(status = update, history = listOf(status.message!!) + (history ?: listOf()))
+        val currentStatusMessage = status.message
+        return if (currentStatusMessage != null) {
+            copy(status = update, history = listOf(currentStatusMessage) + (history ?: listOf()))
+        } else {
+            copy(status = update)
+        }
     }
 
     /**

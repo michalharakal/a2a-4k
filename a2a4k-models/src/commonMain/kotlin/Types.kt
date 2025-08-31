@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.a2a_4k.models
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
@@ -30,6 +31,7 @@ class StringOrIntSerializer : KSerializer<StringOrInt> {
         element<Int>("string")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: StringOrInt) {
         if (value is StringValue && value.value != null) {
             encoder.encodeString(value.value)
