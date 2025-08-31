@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 // SPDX-FileCopyrightText: 2025
 //
 // SPDX-License-Identifier: Apache-2.0
